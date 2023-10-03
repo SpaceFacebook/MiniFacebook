@@ -1,13 +1,12 @@
-// authSlice.js
-
 import { createSlice } from '@reduxjs/toolkit';
 
-const loginSlice = createSlice({
+const authSlice = createSlice({
   name: 'auth',
   initialState: {
     email: '',
     password: '',
     isLoggedIn: false, // Ajoutez une nouvelle propriété pour gérer l'état de connexion
+    userName: '', // Ajoutez une nouvelle propriété pour stocker le nom de l'utilisateur
   },
   reducers: {
     setEmail: (state, action) => {
@@ -16,21 +15,53 @@ const loginSlice = createSlice({
     setPassword: (state, action) => {
       state.password = action.payload;
     },
-    resetAuth: (state) => {
-      state.email = '';
-      state.password = '';
-    },
+    // resetAuth: (state) => {
+    //   state.email = '';
+    //   state.password = '';
+    // },
     setLoggedIn: (state) => {
       state.isLoggedIn = true;
     },
     setLoggedOut: (state) => {
       state.isLoggedIn = false;
     },
-    setUserName: (state, action) => { // Nouvelle action pour stocker le nom de l'utilisateur
+    setUserName: (state, action) => {
       state.userName = action.payload;
+    },
+    setFirstName: (state, action) => {
+      state.firstName = action.payload;
+    },
+    setSurName: (state, action) => {
+      state.surName = action.payload;
+    },
+    setGender: (state, action) => {
+      state.gender = action.payload;
+    },
+    setSelectedDay: (state, action) => {
+      state.selectedDay = action.payload;
+    },
+    setSelectedMonth: (state, action) => {
+      state.selectedMonth = action.payload;
+    },
+    setSelectedYear: (state, action) => {
+      state.selectedYear = action.payload;
     },
   },
 });
 
-export const { setEmail, setPassword, resetAuth, setLoggedIn, setLoggedOut ,setUserName} = loginSlice.actions;
-export default loginSlice.reducer;
+export const {
+  setEmail,
+  setPassword,
+  resetAuth,
+  setLoggedIn,
+  setLoggedOut,
+  setUserName,
+  setFirstName,
+  setSurName,
+  setGender,
+  setSelectedDay,
+  setSelectedMonth,
+  setSelectedYear,
+} = authSlice.actions;
+
+export default authSlice.reducer;

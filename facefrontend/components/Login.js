@@ -1,6 +1,6 @@
 // Login.js
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setEmail, setPassword, resetAuth } from '../public/src/features/loginSlice'; // Importez les actions d'authentification
 import imageLogin from "../images/imagelogin.png"
@@ -8,10 +8,18 @@ import Image from 'next/image';
 import logo from "../images/logoMiniFacebook.png";
 import { useRouter } from 'next/router';
 import { setLoggedIn, setLoggedOut,setUserName } from '../public/src/features/loginSlice'
-
+import Link from 'next/link';
+import RegisterModal from './EnregistrerModal';
 const Login = () => {
   const dispatch = useDispatch();
-  
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const handleCreateAccountClick = () => {
+    setShowRegisterModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowRegisterModal(false);
+  };
   const { email, password } = useSelector((state) => state.auth); // Accédez aux états d'authentification
   const router = useRouter();
 
@@ -42,11 +50,7 @@ const Login = () => {
        
         console.error('Error:', error);
       }
-    
-      // Réinitialisez les champs email et password après la soumission
-      dispatch(resetAuth());
     };
-
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center items-center">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md">
@@ -83,11 +87,15 @@ const Login = () => {
           Log in
         </button>
         <p className="mt-4 text-center text-gray-600">
-          <a href="#" className="text-blue-500 hover:underline">Create new account</a> ·{' '}
+          <a onClick={handleCreateAccountClick} className="text-blue-500 hover:underline">Create new account</a> ·{' '}
           <a href="#" className="text-blue-500 hover:underline">Forgotten password?</a>
         </p>
       </div>
-    </div>
+
+      {showRegisterModal && (
+        <RegisterModal onClose={handleCloseModal} />
+      )}
+      </div>
   );
 };
 
