@@ -18,12 +18,63 @@ const CreatePost = () => {
   const isOpen = useSelector((state) => state.post.isOpen);
   const inputRef = useRef(null);
   const userName = useSelector((state) => state.auth.userName);
+<<<<<<< HEAD
   const handleInputChange = () => {
     // Mettez ici votre logique pour déterminer quand afficher le composant
     dispatch(openModal());
       
     console.log(isOpen)
   };
+=======
+  const email = useSelector((state) => state.auth.email);
+  console.log("hi email from me: ",email)
+  const handleClick = () => {
+    hiddenFileInput.current.click();
+  };
+
+  const addImageToPost = (e) => {
+    const reader = new FileReader();
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = (e) => {
+        setImageToPost(e.target.result);
+      };
+    }
+  };
+  const removeImage = () => {
+    setImageToPost(null);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!inputRef.current.value) return;
+    const formData = new FormData();
+
+    formData.append("file", imageToPost);
+    console.log("imagetopost: " + imageToPost);
+    formData.append("post", inputRef.current.value);
+    formData.append("name", userName);
+    formData.append("email", email);
+    console.log("emaillllllll hi : ",email)
+    formData.append("image", imageToPost);
+    formData.append("profilePic", imgProfile);
+
+    axios
+      .post(FACEBOOK_CLONE_ENDPOINT, formData, {
+        headers: { Accept: "application/json" },
+      })
+      .then((response) => {
+        inputRef.current.value = "";
+        dispatch(addPost(response.data));
+        console.log(response.data);
+        removeImage();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+>>>>>>> 39328d6daeda85a470ce13452582cf325bcb8f9c
   return (
     <>
       <div className='bg-white rounded-md shadow-md text-gray-500 p-2'>

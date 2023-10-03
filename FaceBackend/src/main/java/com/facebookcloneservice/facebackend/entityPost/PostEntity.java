@@ -1,5 +1,6 @@
 package com.facebookcloneservice.facebackend.entityPost;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,10 @@ public class PostEntity {
     @Lob
     private String profilePic;
     private String timeStamp;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
 

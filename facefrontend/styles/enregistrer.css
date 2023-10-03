@@ -1,0 +1,55 @@
+.bg-cae2fe {
+    background-color: #CAE2FE;
+  }
+  .bg-474656 {
+    color: #474656;
+  }
+  /* styles.css */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Assurez-vous que le modal apparaît au-dessus du contenu */
+  }
+  
+  .modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1100; /* Assurez-vous que le modal apparaît au-dessus du modal-overlay */
+  }
+  
+  /* Style du bouton de fermeture du modal */
+  button {
+    background: none;
+    border: none;
+    color: blue;
+    cursor: pointer;
+  }
+/* styles.css */
+.close-button {
+    position: absolute;
+    top: 10px;
+    color: aqua;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+  }
+  
+  .underline {
+    margin-top: 8px;
+    border-bottom: 1px solid #ccc;
+  }
+    
+
+ 
