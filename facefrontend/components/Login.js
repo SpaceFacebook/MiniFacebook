@@ -7,13 +7,8 @@ import imageLogin from "../images/imagelogin.png"
 import Image from 'next/image';
 import logo from "../images/logoMiniFacebook.png";
 import { useRouter } from 'next/router';
-<<<<<<< HEAD
-import { setLoggedIn, setLoggedOut,setUserName} from '../public/src/features/loginSlice'
-=======
 import { setLoggedIn, setLoggedOut,setUserName } from '../public/src/features/loginSlice'
-import Link from 'next/link';
 import RegisterModal from './EnregistrerModal';
->>>>>>> 39328d6daeda85a470ce13452582cf325bcb8f9c
 const Login = () => {
   const dispatch = useDispatch();
   const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -91,12 +86,7 @@ const Login = () => {
           Log in
         </button>
         <p className="mt-4 text-center text-gray-600">
-<<<<<<< HEAD
-        
-          <a href="#" className="text-blue-500 hover:underline">Create new account</a> ·{' '}
-=======
           <a onClick={handleCreateAccountClick} className="text-blue-500 hover:underline">Create new account</a> ·{' '}
->>>>>>> 39328d6daeda85a470ce13452582cf325bcb8f9c
           <a href="#" className="text-blue-500 hover:underline">Forgotten password?</a>
         </p>
       </div>

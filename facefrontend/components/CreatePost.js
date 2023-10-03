@@ -18,14 +18,6 @@ const CreatePost = () => {
   const isOpen = useSelector((state) => state.post.isOpen);
   const inputRef = useRef(null);
   const userName = useSelector((state) => state.auth.userName);
-<<<<<<< HEAD
-  const handleInputChange = () => {
-    // Mettez ici votre logique pour déterminer quand afficher le composant
-    dispatch(openModal());
-      
-    console.log(isOpen)
-  };
-=======
   const email = useSelector((state) => state.auth.email);
   console.log("hi email from me: ",email)
   const handleClick = () => {
@@ -74,7 +66,6 @@ const CreatePost = () => {
       });
   };
 
->>>>>>> 39328d6daeda85a470ce13452582cf325bcb8f9c
   return (
     <>
       <div className='bg-white rounded-md shadow-md text-gray-500 p-2'>
