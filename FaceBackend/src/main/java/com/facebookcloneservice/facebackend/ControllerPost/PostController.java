@@ -21,6 +21,7 @@ public class PostController {
     public Post addPost(@RequestParam Map<String,String> requestparams) throws Exception {
        String strpost=requestparams.get("post");
         String email=requestparams.get("email");
+        System.out.println("maillll: "+email);
         String name=requestparams.get("name");
         String file=requestparams.get("file");
         String image=requestparams.get("image");

@@ -17,6 +17,8 @@ const CreatePost = () => {
   const dispatch=useDispatch();
 
   const userName = useSelector((state) => state.auth.userName);
+  const email = useSelector((state) => state.auth.email);
+  console.log("hi email from me: ",email)
   const handleClick = () => {
     hiddenFileInput.current.click();
   };
@@ -43,7 +45,8 @@ const CreatePost = () => {
     console.log("imagetopost: " + imageToPost);
     formData.append("post", inputRef.current.value);
     formData.append("name", userName);
-    formData.append("email", "kaoutar@gmail.com");
+    formData.append("email", email);
+    console.log("emaillllllll hi : ",email)
     formData.append("image", imageToPost);
     formData.append("profilePic", imgProfile);
 

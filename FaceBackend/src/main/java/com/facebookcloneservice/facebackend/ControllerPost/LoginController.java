@@ -34,7 +34,7 @@ import java.util.Optional;
                     // Authentification réussie
                     Map<String, String> response = new HashMap<>();
                     response.put("message", "Login successful");
-                    response.put("userName", user.getName()); // Ajoutez le nom de l'utilisateur
+                    response.put("userName", user.getFirstName()); // Ajoutez le nom de l'utilisateur
                     return ResponseEntity.ok(response);
                 }
             }
