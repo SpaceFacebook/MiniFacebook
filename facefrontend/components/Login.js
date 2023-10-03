@@ -7,8 +7,7 @@ import imageLogin from "../images/imagelogin.png"
 import Image from 'next/image';
 import logo from "../images/logoMiniFacebook.png";
 import { useRouter } from 'next/router';
-import { setLoggedIn, setLoggedOut,setUserName } from '../public/src/features/loginSlice'
-
+import { setLoggedIn, setLoggedOut,setUserName} from '../public/src/features/loginSlice'
 const Login = () => {
   const dispatch = useDispatch();
   
@@ -83,6 +82,7 @@ const Login = () => {
           Log in
         </button>
         <p className="mt-4 text-center text-gray-600">
+        
           <a href="#" className="text-blue-500 hover:underline">Create new account</a> ·{' '}
           <a href="#" className="text-blue-500 hover:underline">Forgotten password?</a>
         </p>

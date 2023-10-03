@@ -3,7 +3,8 @@ import Post from './Post'
 import { useDispatch ,useSelector} from 'react-redux';
 import { addAllPost, selectPost } from "../public/src/features/postSlice";
 import axios from 'axios';
-import Image from 'next/image';
+
+
 const Posts = () => {
   const dispatch = useDispatch();
   const posts = useSelector(selectPost);

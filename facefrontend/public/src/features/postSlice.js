@@ -3,7 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 export const postSlice = createSlice({
     name:"post",
     initialState:{
-        value:[]
+        value:[],
+        isOpen: false,
+        showCommentSection:false
     },
     reducers:{
         addPost:(state,action)=>{
@@ -12,11 +14,21 @@ export const postSlice = createSlice({
         addAllPost:(state,action)=>{
             state.value = action.payload;
         },
+        openModal: (state) => {
+            state.isOpen = true;
+          },
+          closeModal: (state) => {
+            state.isOpen = false;
+          },
+          setShowCommentSection:(state)=>{
+            state.showCommentSection = true;
+          }
 
     },
 
 
 })
-export const {addPost,addAllPost}= postSlice.actions;
+export const {addPost,addAllPost, openModal, closeModal,setShowCommentSection}= postSlice.actions;
 export const selectPost=(state)=> state.post.value;
+
 export default postSlice.reducer;
