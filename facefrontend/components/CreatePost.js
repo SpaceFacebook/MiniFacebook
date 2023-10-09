@@ -18,6 +18,7 @@ const CreatePost = () => {
   const isOpen = useSelector((state) => state.post.isOpen);
   const inputRef = useRef(null);
   const userName = useSelector((state) => state.auth.userName);
+
   const email = useSelector((state) => state.auth.email);
   console.log("hi email from me: ",userName)
   const handleClick = () => {
@@ -30,6 +31,7 @@ const CreatePost = () => {
       
     console.log(isOpen)
   };
+
   const addImageToPost = (e) => {
     const reader = new FileReader();
     if (e.target.files[0]) {

@@ -50,7 +50,7 @@ const Post = ({ post }) => {
         </button></div>
 
         {/* Composant de commentaire */}
-        {showCommentSection && <CommentSection postId={post.id} />}
+        {showCommentSection && <CommentSection postId={post.id}post={post} />}
       </div>
     </div>
   );
