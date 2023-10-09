@@ -5,7 +5,7 @@ import { IoMdPhotos } from "react-icons/io";
 import { useSession } from 'next-auth/react';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
-import { openModal } from '../public/src/features/postSlice';
+import { openModal, closeModal } from '../public/src/features/postSlice';
 import axios from 'axios';
 
 
@@ -19,11 +19,17 @@ const CreatePost = () => {
   const inputRef = useRef(null);
   const userName = useSelector((state) => state.auth.userName);
   const email = useSelector((state) => state.auth.email);
-  console.log("hi email from me: ",email)
+  console.log("hi email from me: ",userName)
   const handleClick = () => {
     hiddenFileInput.current.click();
   };
 
+  const handleInputChange = () => {
+    // Mettez ici votre logique pour déterminer quand afficher le composant
+    dispatch(openModal());
+      
+    console.log(isOpen)
+  };
   const addImageToPost = (e) => {
     const reader = new FileReader();
     if (e.target.files[0]) {
@@ -65,6 +71,9 @@ const CreatePost = () => {
         console.log(error);
       });
   };
+  const handleClose = () => {
+    dispatch(closeModal()); // Utilisez l'action closeModal pour fermer Publish
+  };
 
   return (
     <>
@@ -96,7 +105,7 @@ const CreatePost = () => {
             </div>
           </div>
           </div>
-          {isOpen &&  <div className='modal-overlay'><div className='modal'><Publish /></div></div>}
+          {isOpen &&  <Publish  onClose={handleClose}/>}
         </div>
      
     </>
