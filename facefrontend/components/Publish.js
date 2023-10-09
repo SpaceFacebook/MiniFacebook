@@ -1,14 +1,14 @@
 import React from 'react';
 import imgProfile from '../images/man.png';
-import Image from 'next/image';
 import { useRef ,useState} from 'react';
 import { IoMdPhotos } from "react-icons/io";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { useDispatch,useSelector } from 'react-redux';
 import { addPost, selectPost } from "../public/src/features/postSlice";
-const Publish = () => {
-    const FACEBOOK_CLONE_ENDPOINT = "http://localhost:8080/api/v1/post";
-    
+const Publish = ({ onClose }) => {
+  const FACEBOOK_CLONE_ENDPOINT = "http://localhost:8080/api/v1/post"; 
   const inputRef = useRef(null);
   const hiddenFileInput = useRef(null);
   const [imageToPost,setImageToPost] = useState(null);
@@ -62,37 +62,55 @@ const Publish = () => {
 
   
     return (
-        
-      <div className="bg-white min-h-screen flex flex-col items-center justify-center modal">
-        <div className="bg-white shadow-md w-full md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%] p-4 rounded-lg mt-8">
-          <h1 className="text-4xl font-medium text-black text-center my-4">
+      <div className='modal-overlay'><div className='modal w-2/4 h-3/4'>
+      <div className="flex justify-between items-center"> {/* Utilisez flex pour aligner les éléments horizontalement */}
+          <h1 className="text-2xl font-medium text-black my-4 flex-1"> {/* Utilisez flex-1 pour que le titre prenne l'espace restant */}
             Create Post
           </h1>
+          <button className="text-gray-500 cursor-pointer " onClick={onClose}>&#10006;</button> {/* Bouton Close */}
+        </div>
           <div className="border-t border-solid border-darkslategray my-4"></div>
-          <div className="text-darkslategray text-2xl my-4">
-            What’s in your mind, Kaoutar?
-          </div>
-          <form>
-          <input
-              type="text"
-              ref={inputRef}
-              className='rounded-full h-12 focus:outline-none font-medium bg-gray-100 px-4 flex-1'
-              placeholder={`What's on your mind, ${userName}?`}
-            />
-            <button hidden  onClick={handleSubmit}></button>
-          </form>
+          <textarea
+          rows="4" // Définissez le nombre de lignes souhaité ici
+          ref={inputRef}
+          className='rounded-lg h-2/4 focus:outline-none font-medium bg-gray-100 px-4 w-full text-darkslategray text-xl'
+          style={{ border: 'none', background: 'none' }}
+          placeholder="What’s in your mind, Kaoutar?"
+        ></textarea>
+          
+          <form className="flex items-center">
           <div
-              onClick={handleClick}
-              className="cursor-pointer hover:bg-gray-100 rounded-md p-1">
-              <IoMdPhotos className="text-green-500" size={20} />
-              <input
+            className='relative rounded-full h-12 focus:outline-none font-medium bg-gray-100 px-4 flex-1'
+            onClick={handleClick}
+            style={{ position: 'relative' }}
+          >
+            <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}>
+              <IoMdPhotos className="text-blue-500" size={20} />
+            </span>
+            <p className="mt-2">add a picture to your post</p>
+            
+              
+            
+          </div>
+          <input
             ref={hiddenFileInput}
             onChange={addImageToPost}
             type="file"
             accept="image/*"
             hidden
           />
-            </div>
+          <button className=" text-blue-500 py-2 px-4  ml-2 " onClick={handleSubmit}><FontAwesomeIcon icon={faPaperPlane} className="text-2xl"/></button>
+        </form>
+        
+        {/* <form className="flex items-center">
+          <div
+            type="text"
+            ref={inputRef}
+            className='rounded-full h-12 focus:outline-none font-medium bg-gray-100 px-4 flex-1'
+            placeholder="add to your post"
+          >add a picture to your post</div>
+          <button className="bg-blue-500 text-white py-2 px-4 rounded-lg" onClick={handleSubmit}>Post</button>
+        </form> */}
             
           
           {imageToPost && (
@@ -105,7 +123,7 @@ const Publish = () => {
             </div>
           )}
         </div>
-      </div>
+        </div>
     );
   };
 

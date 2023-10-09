@@ -14,11 +14,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@reduxjs/toolkit": "^1.9.6",
     "axios": "^1.5.1",
-<<<<<<< HEAD
-    "cors": "^2.8.5",
-=======
     "bootstrap": "^5.3.2",
->>>>>>> 39328d6daeda85a470ce13452582cf325bcb8f9c
     "next": "latest",
     "next-auth": "^4.23.2",
     "react": "latest",
