@@ -31,9 +31,6 @@ const authSlice = createSlice({
     setFirstName: (state, action) => {
       state.firstName = action.payload;
     },
-    setSurName: (state, action) => {
-      state.surName = action.payload;
-    },
     setGender: (state, action) => {
       state.gender = action.payload;
     },
