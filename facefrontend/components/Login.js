@@ -8,7 +8,6 @@ import Image from 'next/image';
 import logo from "../images/logoMiniFacebook.png";
 import { useRouter } from 'next/router';
 import { setLoggedIn, setLoggedOut,setUserName } from '../public/src/features/loginSlice'
-import Link from 'next/link';
 import RegisterModal from './EnregistrerModal';
 const Login = () => {
   const dispatch = useDispatch();
