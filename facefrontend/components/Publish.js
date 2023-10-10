@@ -15,6 +15,7 @@ const Publish = ({ onClose }) => {
   const dispatch=useDispatch();
 
   const userName = useSelector((state) => state.auth.userName);
+  const email=useSelector((state)=>state.auth.email);
   const handleClick = () => {
     hiddenFileInput.current.click();
   };
@@ -41,7 +42,7 @@ const Publish = ({ onClose }) => {
     console.log("imagetopost: " + imageToPost);
     formData.append("post", inputRef.current.value);
     formData.append("name", userName);
-    formData.append("email", "kaoutar@gmail.com");
+    formData.append("email", email);
     formData.append("image", imageToPost);
     formData.append("profilePic", imgProfile);
 
@@ -54,6 +55,7 @@ const Publish = ({ onClose }) => {
         dispatch(addPost(response.data));
         console.log(response.data);
         removeImage();
+        onClose();
       })
       .catch((error) => {
         console.log(error);
@@ -75,7 +77,7 @@ const Publish = ({ onClose }) => {
           ref={inputRef}
           className='rounded-lg h-2/4 focus:outline-none font-medium bg-gray-100 px-4 w-full text-darkslategray text-xl'
           style={{ border: 'none', background: 'none' }}
-          placeholder="What’s in your mind, Kaoutar?"
+          placeholder={`What’s in your mind, ${userName}?`}
         ></textarea>
           
           <form className="flex items-center">
