@@ -7,6 +7,8 @@ const authSlice = createSlice({
     password: '',
     isLoggedIn: false, // Ajoutez une nouvelle propriété pour gérer l'état de connexion
     userName: '', // Ajoutez une nouvelle propriété pour stocker le nom de l'utilisateur
+    firstName:'',
+    surName:'',
   },
   reducers: {
     setEmail: (state, action) => {
@@ -30,6 +32,9 @@ const authSlice = createSlice({
     },
     setFirstName: (state, action) => {
       state.firstName = action.payload;
+    },
+    setSurName: (state, action) => {
+      state.surName = action.payload;
     },
     setGender: (state, action) => {
       state.gender = action.payload;

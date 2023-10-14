@@ -1,6 +1,8 @@
 package com.facebookcloneservice.facebackend.ControllerPost;
 
 import com.facebookcloneservice.facebackend.entityPost.Commentaire;
+import com.facebookcloneservice.facebackend.entityPost.User;
+import com.facebookcloneservice.facebackend.servicepost.AuthService;
 import com.facebookcloneservice.facebackend.servicepost.CommentaireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +15,24 @@ import java.util.List;
 public class CommentaireController {
     @Autowired
     private CommentaireService commentaireService;
+    @Autowired
+    private AuthService authService;
 
     @PostMapping("/ajouter")
     public Commentaire ajouterCommentaire(@RequestBody Commentaire commentaire) {
-        System.out.println("commentaire : "+commentaire.getContenu()+" ");
-        return commentaireService.ajouterCommentaire(commentaire);
+        // Retrieve the user based on the email
+        User user = authService.findByEmail(commentaire.getUser().getEmail());
+
+        if (user != null) {
+            // Set the user in the Commentaire entity
+            commentaire.setUser(user);
+
+            // Save the comment
+            System.out.println("commentaire : " + commentaire.getContenu() + " ");
+            return commentaireService.ajouterCommentaire(commentaire);
+        } else {
+            return null; // You should handle this case accordingly
+        }
     }
 
     @GetMapping("/post/{postId}")

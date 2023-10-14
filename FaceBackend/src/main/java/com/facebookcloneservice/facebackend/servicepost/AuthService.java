@@ -22,4 +22,15 @@ public class AuthService {
         }
         return Optional.empty();
     }
+
+    public User findByEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        // Check if the user exists
+        if (userOptional.isPresent()) {
+            return userOptional.get();
+        } else {
+            return null;
+        }
+    }
 }
