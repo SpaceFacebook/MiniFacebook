@@ -1,6 +1,7 @@
 package com.facebookcloneservice.facebackend.servicepost;
 
 import com.facebookcloneservice.facebackend.entityPost.PostEntity;
+import com.facebookcloneservice.facebackend.entityPost.User;
 import com.facebookcloneservice.facebackend.modelpost.Post;
 import com.facebookcloneservice.facebackend.postrepository.PostEntityRepository;
 import org.springframework.beans.BeanUtils;
@@ -61,5 +62,15 @@ public class PostServiceImpl implements  PostService{
                                 .build()
                 ).collect(Collectors.toList());
         return posts;
+    }
+    @Override
+    public List<PostEntity> getPostsByUser(User user) {
+        // Implement the logic to get posts by user
+        return postEntityRepository.findByUser(user);
+    }
+    @Override
+    public List<PostEntity> getPostsByEmail(String email) {
+        // Implement the logic to get posts by user
+        return postEntityRepository.findByEmail(email);
     }
 }

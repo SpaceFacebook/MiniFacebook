@@ -12,11 +12,19 @@ const Post = ({ post }) => {
   const [reactionType, setReactionType] = useState('');
   const [likeCount, setLikeCount] = useState(0);
   const [dislikeCount, setDislikeCount] = useState(0);
+
+  const [activePostId, setActivePostId] = useState(null);
+
   const showCommentSection = useSelector((state) => state.post.showCommentSection);
   const email=useSelector((state)=>state.auth.email);
   const dispatch = useDispatch();
-  const handleCommentButtonClick = () => {
-    dispatch(setShowCommentSection())
+  const handleCommentButtonClick = (postId) => {
+    if (postId === activePostId) {
+      setActivePostId(null);
+    } else {
+      setActivePostId(postId);
+    }
+    dispatch(setShowCommentSection());
   };
   const handleReactionClick = async (postId, reactionType) => {
     try {
@@ -108,16 +116,22 @@ const Post = ({ post }) => {
        
         {/* Bouton de commentaire */}
         <button
-          onClick={handleCommentButtonClick}
-          className="text-gray-500 hover:text-blue-500 cursor-pointer flex items-center space-x-2"
-        >
+  onClick={() => handleCommentButtonClick(post.id)}
+  className="text-gray-500 hover:text-blue-500 cursor-pointer flex items-center space-x-2"
+>
+
           <FaComment className="comment-icon" />
           <span>Comment</span>
           
         </button></div>
 
         {/* Composant de commentaire */}
-        {showCommentSection && <CommentSection postId={post.id} post={post} />}
+
+
+        {showCommentSection && activePostId === post.id && (
+          <CommentSection postId={post.id} post={post} />
+        )}
+
       </div>
     </div>
   );

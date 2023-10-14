@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const CommentSection = ({ postId ,post}) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
+
   
+
+  const email=useSelector((state)=>state.auth.email);
+
   // Charger les commentaires existants depuis le backend
   useEffect(() => {
     async function fetchComments() {
@@ -32,6 +37,7 @@ const CommentSection = ({ postId ,post}) => {
     try {
       const response = await axios.post('http://localhost:8080/api/commentaires/ajouter', {
         post: { id: postId },
+        user:{email:email},
         contenu: newComment,
       }, {
         headers: {
