@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import CommentSection from './CommentSection';
 import { FaComment } from 'react-icons/fa';
+
 const Post = ({ post }) => {
   const showCommentSection = useSelector((state) => state.post.showCommentSection);
   const dispatch = useDispatch();
@@ -50,7 +51,7 @@ const Post = ({ post }) => {
         </button></div>
 
         {/* Composant de commentaire */}
-        {showCommentSection && <CommentSection postId={post.id}post={post} />}
+        {showCommentSection && <CommentSection postId={post.id} post={post} />}
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import axios from 'axios';
 const CommentSection = ({ postId ,post}) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-
+  
   // Charger les commentaires existants depuis le backend
   useEffect(() => {
     async function fetchComments() {
