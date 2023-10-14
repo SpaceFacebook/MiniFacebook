@@ -126,9 +126,12 @@ const Post = ({ post }) => {
         </button></div>
 
         {/* Composant de commentaire */}
+
+
         {showCommentSection && activePostId === post.id && (
           <CommentSection postId={post.id} post={post} />
         )}
+
       </div>
     </div>
   );

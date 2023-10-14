@@ -5,7 +5,11 @@ import { useSelector } from 'react-redux';
 const CommentSection = ({ postId ,post}) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
+
+  
+
   const email=useSelector((state)=>state.auth.email);
+
   // Charger les commentaires existants depuis le backend
   useEffect(() => {
     async function fetchComments() {
