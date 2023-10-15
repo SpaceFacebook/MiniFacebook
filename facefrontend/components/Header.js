@@ -13,6 +13,7 @@ const Header = () => {
   const handleProfil=()=>{
     router.push('/profil');
   }
+
   useEffect(() => {
     const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
 
@@ -28,10 +29,13 @@ const Header = () => {
         setIsLoading(false);
       });
   }, [currentUserEmail]);
+  const handlePagehome=()=>{
+    router.push('/home');
+  }
   return (
     <div className="bg-white p-2 shadow-md top-0 sticky z-50 h-16 flex justify-between items-center">
       <div className="flex">
-        <Image src={logo} height={100} width={260} />
+        <Image src={logo} height={100} width={260}  onClick={handlePagehome}/>
       </div>
       <div className="flex items-center space-x-2">
       {isLoading ? (

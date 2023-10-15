@@ -1,9 +1,10 @@
 package com.facebookcloneservice.facebackend.entityPost;
 
-import com.facebookcloneservice.facebackend.modelpost.Post;
-
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.Date;
+
 @Entity
 @Data
 public class Commentaire {
@@ -20,6 +21,9 @@ public class Commentaire {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateCommentaire;
+
 
     // Getters et setters
 }
