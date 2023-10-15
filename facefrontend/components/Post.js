@@ -1,4 +1,5 @@
-import React, {axios,useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
+import axios from 'axios';
 import imgProfile from '../images/man.png';
 import Image from 'next/image';
 import {setShowCommentSection} from "../public/src/features/postSlice"
@@ -12,7 +13,8 @@ const Post = ({ post }) => {
   const [reactionType, setReactionType] = useState('');
   const [likeCount, setLikeCount] = useState(0);
   const [dislikeCount, setDislikeCount] = useState(0);
-
+  const [profileImage, setProfileImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [activePostId, setActivePostId] = useState(null);
 
   const showCommentSection = useSelector((state) => state.post.showCommentSection);
@@ -66,7 +68,21 @@ const Post = ({ post }) => {
       console.error('Erreur lors de la récupération du nombre de réactions : ', error);
     }
   };
+  useEffect(() => {
+    const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${post.email}`;
 
+    axios
+      .get(USER_INFO_URL)
+      .then((response) => {
+        setProfileImage(response.data.profileImage);
+        setIsLoading(false);
+        // console.log("userInfo: ",userInfo)
+      })
+      .catch((error) => {
+        console.error('Error fetching user information:', error);
+        setIsLoading(false);
+      });
+  }, [post.email]);
   useEffect(() => {
     // Appeler la fonction pour obtenir le nombre de réactions lorsque le composant se monte
     fetchReactionCount();
@@ -76,13 +92,17 @@ const Post = ({ post }) => {
     <div className='flex flex-col' key={post.id}>
       <div className='bg-white mt-6 rounded-md p-4'>
         <div className="flex items-center space-x-2">
-          <Image
-            src={imgProfile}
-            height={40}
-            width={40}
-            className="rounded-full cursor-pointer"
-            alt=''
-          />
+        {isLoading ? (
+  <div>Loading...</div>
+) : (
+ 
+  <Image
+    src={profileImage}
+    height={40}
+    width={40}
+    className="object-cover rounded-full"
+  />
+  )}
           <div>
             <p className='font-medium'>{post.name}</p>
             <p className="text-xs text-gray-500">{post.timeStamp}</p>

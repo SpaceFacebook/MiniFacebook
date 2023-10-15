@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import imgProfile from '../images/man.png';
 import Image from 'next/image';
 import { IoMdPhotos } from "react-icons/io";
@@ -14,7 +14,9 @@ import Publish from './Publish';
 
 const CreatePost = () => {
   //const {data: session } =useSession();
- 
+  const currentUserEmail=useSelector((state)=>state.auth.email);
+  const [profileImage, setProfileImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.post.isOpen);
   const inputRef = useRef(null);
@@ -77,17 +79,36 @@ const CreatePost = () => {
   const handleClose = () => {
     dispatch(closeModal()); // Utilisez l'action closeModal pour fermer Publish
   };
+  useEffect(() => {
+    const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
 
+    axios
+      .get(USER_INFO_URL)
+      .then((response) => {
+        setProfileImage(response.data.profileImage);
+        setIsLoading(false);
+        // console.log("userInfo: ",userInfo)
+      })
+      .catch((error) => {
+        console.error('Error fetching user information:', error);
+        setIsLoading(false);
+      });
+  }, [currentUserEmail]);
   return (
     <>
       <div className='bg-white rounded-md shadow-md text-gray-500 p-2'>
         <div className='flex p-4 space-x-2 items-center'>
-          <Image
-            src={imgProfile}
-            height={40}
-            width={40}
-            className="rounded-full cursor-pointer"
-          />
+          {isLoading ? (
+  <div>Loading...</div>
+) : (
+ 
+  <Image
+    src={profileImage}
+    height={40}
+    width={40}
+    className="object-cover rounded-full"
+  />
+  )}
           
                <form className='flex flex-1' onClick={handleInputChange}>
             <input
