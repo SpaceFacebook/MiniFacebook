@@ -4,7 +4,7 @@ import Header from '../components/Header'
 function Profil() {
   return (
     <div>
-      {/* <Header/> */}
+      <Header/>
       <Profile/>
     </div>
   )

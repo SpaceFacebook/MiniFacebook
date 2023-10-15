@@ -77,7 +77,6 @@ import java.util.*;
                 String fileName =user.getId() + "_cover.jpg";
                 File imageFile = new File(COVER_IMAGE_UPLOAD_DIR, fileName);
                 coverImage.transferTo(imageFile);
-
                 // Update the user's cover image
                 user.setCoverImage(fileName);
                 userRepository.save(user);

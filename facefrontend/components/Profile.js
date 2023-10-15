@@ -1,7 +1,5 @@
 import React, {useState, useEffect, useRef} from "react";
 import axios from 'axios';
-import Image1 from "../images/camera.png";
-import Image2 from '../images/chat.jpg';
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCameraRetro } from "@fortawesome/free-solid-svg-icons";
@@ -78,22 +76,15 @@ const Profile = () => {
           src={Image}
         /> */}
        {isLoading ? (
-        // Vous pouvez afficher une image de chargement ici
-        // Par exemple :
-        // <div className="loading-spinner"></div>
-        // Ou simplement <div></div>
-        <div>Loading...</div>
-      ) : (
-        coverImage && (
-          <Image
+  <div>Loading...</div>
+) : (
+  <Image
     className="absolute top-[16px] left-[0px] w-full h-[400px] object-cover"
-    src={coverImage ? coverImage : Image1}
+    src={coverImage}
     width={400}
     height={200}
   />
-        )
-      )}
-
+)}
       <input
         type="file"
         id="fileInput"
@@ -146,21 +137,17 @@ const Profile = () => {
         height={156}
       /> */}
         {isLoading ? (
-        // Vous pouvez afficher une image de chargement ici
-        // Par exemple :
-        // <div className="loading-spinner"></div>
-        // Ou simplement <div></div>
-        <div>Loading...</div>
-      ) : (
-        coverImage && (
+  <div>Loading...</div>
+) : (
+  
           <Image
     className="absolute top-[354px] left-[90px] w-[160px] h-[156px] object-cover rounded-full"
-    src={profileImage ? profileImage : Image2}
+    src={profileImage}
     width={160}
     height={156}
   />
         )
-      )}
+}
       <input
         type="file"
         id="profileImageInput"
