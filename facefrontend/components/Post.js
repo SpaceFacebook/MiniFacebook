@@ -12,7 +12,9 @@ const Post = ({ post }) => {
   const [reactionType, setReactionType] = useState('');
   const [likeCount, setLikeCount] = useState(0);
   const [dislikeCount, setDislikeCount] = useState(0);
+
   const [activePostId, setActivePostId] = useState(null);
+
   const showCommentSection = useSelector((state) => state.post.showCommentSection);
   const email=useSelector((state)=>state.auth.email);
   const dispatch = useDispatch();
@@ -125,9 +127,12 @@ const Post = ({ post }) => {
         </button></div>
 
         {/* Composant de commentaire */}
+
+
         {showCommentSection && activePostId === post.id && (
           <CommentSection postId={post.id} post={post} />
         )}
+
       </div>
     </div>
   );
