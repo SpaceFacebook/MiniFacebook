@@ -93,7 +93,8 @@ const Post = ({ post }) => {
         </div>
         {post.image && (
           <div className="relative h-60 md:h-96 bg-white">
-            <img src={post.image} alt="" className="object-cover w-full h-full" />
+            <img src={post.image} alt="" className="object-cover w-full h-full" 
+            />
           </div>
         )}
         <hr className="my-4 border-t border-gray-300" />

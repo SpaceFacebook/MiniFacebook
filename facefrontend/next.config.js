@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   images: {
@@ -8,6 +7,7 @@ const nextConfig = {
       "images.pexels.com",
       "platform-lookaside.fbsbx.com",
       "static.xx.fbcdn.net",
+      "localhost", // Ajoutez "localhost" ici
     ],
   },
 };
