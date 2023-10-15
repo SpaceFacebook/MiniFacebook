@@ -24,7 +24,12 @@ public class User {
     private String password;
     @Temporal(TemporalType.DATE)
     private Date dateBirth;
-    private String image;
+    @Lob
+    @Column(length = 200000000)
+    private String profileImage;
+    @Lob
+    @Column(length = 200000000)
+    private String coverImage;
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Collection<PostEntity> postEntities;

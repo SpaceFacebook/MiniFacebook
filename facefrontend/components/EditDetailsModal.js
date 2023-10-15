@@ -3,7 +3,6 @@ import Modal from 'react-modal'; // Assurez-vous d'installer cette bibliothèque
 
 function EditDetailsModal({ isOpen, onRequestClose, userInfo }) {
   const [updatedUserInfo, setUpdatedUserInfo] = useState(userInfo);
-  console.log("user: ",userInfo)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUpdatedUserInfo({
@@ -28,11 +27,12 @@ function EditDetailsModal({ isOpen, onRequestClose, userInfo }) {
       overlayClassName="modal-overlay" // Ajoutez une classe similaire à celle de RegisterModal
     >
       <div className=''>
-      <div className='signup-header' style={{ justifyContent: 'space-between' }}>
-        <button className="text-gray-500 cursor-pointer " onClick={onRequestClose}>&#10006;</button>
-          <p className="m-0 text-black">
+      <div className='signup-header' style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <p className="m-0 text-black">
             <b>Edit Details</b>
           </p>
+        <button className="text-gray-500 cursor-pointer" onClick={onRequestClose}>&#10006;</button>
+          
         </div>
         <div className="underline"></div>
         <div className="registration-from">
@@ -69,6 +69,44 @@ function EditDetailsModal({ isOpen, onRequestClose, userInfo }) {
                   onChange={handleInputChange}
                   className="border rounded-lg px-4 py-2 w-full"
                 />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="gender" className="block text-sm font-medium text-gray-700">Gender</label>
+                <div className="flex">
+                  <label className="mr-4">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="female"
+                      checked={updatedUserInfo.gender === "FEMALE"}
+                      onChange={handleInputChange}
+                      className="mr-2"
+                    />
+                    Female
+                  </label>
+                  <label className="mr-4">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="male"
+                      checked={updatedUserInfo.gender === "MALE"}
+                      onChange={handleInputChange}
+                      className="mr-2"
+                    />
+                    Male
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="custom"
+                      checked={updatedUserInfo.gender === "CUSTOM"}
+                      onChange={handleInputChange}
+                      className="mr-2"
+                    />
+                    Custom
+                  </label>
+                </div>
               </div>
 
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" type="submit">
