@@ -8,13 +8,14 @@ import Information from "./Information";
 import Posts from './Posts'
 import CreatePost from "./CreatePost";
 import Photos from "./Photos";
+import { requireAuth } from "../auth/customRouter";
 const Profile = () => {
   const currentUserEmail=useSelector((state)=>state.auth.email);
     return (
       <div className="bg-white w-[500px] h-[2873px] overflow-hidden text-left text-10xl text-black font-inter bg-{}">
         {/* <img
           className="absolute top-[145px] left-[0px] w-[1848px] h-[545px] object-cover"
-          alt=""
+          alt=""111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111§
           src={Image}
         /> */}
         <Image
@@ -70,5 +71,5 @@ const Profile = () => {
     );
   };
   
-  export default Profile;
+  export default requireAuth(Profile);
   

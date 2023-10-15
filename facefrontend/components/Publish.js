@@ -7,6 +7,7 @@ import { faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { useDispatch,useSelector } from 'react-redux';
 import { addPost, selectPost } from "../public/src/features/postSlice";
+
 const Publish = ({ onClose }) => {
   const FACEBOOK_CLONE_ENDPOINT = "http://localhost:8080/api/v1/post"; 
   const inputRef = useRef(null);
