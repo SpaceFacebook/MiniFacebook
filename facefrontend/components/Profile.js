@@ -1,3 +1,5 @@
+import React, {useState, useEffect, useRef} from "react";
+import axios from 'axios';
 import Image1 from "../images/camera.png";
 import Image2 from '../images/chat.jpg';
 import Image from "next/image";
@@ -10,7 +12,65 @@ import CreatePost from "./CreatePost";
 import Photos from "./Photos";
 import { requireAuth } from "../auth/customRouter";
 const Profile = () => {
-  const currentUserEmail=useSelector((state)=>state.auth.email);
+  const currentUserEmail = useSelector((state) => state.auth.email);
+  const [userInfo, setUserInfo] = useState(null);
+  const [coverImage, setCoverImage] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("coverImage", file);
+      formData.append("userEmail", currentUserEmail);
+
+      axios
+        .post("http://localhost:8080/api/updateCoverImage", formData)
+        .then((response) => {
+          // Update the cover image in the state
+          setCoverImage(URL.createObjectURL(file));
+        })
+        .catch((error) => {
+          console.error("Error updating cover photo:", error);
+        });
+    }
+  };
+  const handleProfileImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("profileImage", file);
+      formData.append("userEmail", currentUserEmail);
+
+      axios
+        .post("http://localhost:8080/api/updateProfileImage", formData)
+        .then((response) => {
+          setProfileImage(URL.createObjectURL(file));
+        })
+        .catch((error) => {
+          console.error("Error updating profile photo:", error);
+        });
+    }
+  };
+
+  useEffect(() => {
+    const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
+
+    axios
+      .get(USER_INFO_URL)
+      .then((response) => {
+        setUserInfo(response.data);
+        setCoverImage(response.data.coverImage);
+        setProfileImage(response.data.profileImage);
+        setIsLoading(false);
+        // console.log("userInfo: ",userInfo)
+      })
+      .catch((error) => {
+        console.error('Error fetching user information:', error);
+        setIsLoading(false);
+      });
+  }, [currentUserEmail]);
     return (
       <div className="bg-white w-[500px] h-[2873px] overflow-hidden text-left text-10xl text-black font-inter bg-{}">
         {/* <img
@@ -18,15 +78,44 @@ const Profile = () => {
           alt=""111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111§
           src={Image}
         /> */}
-        <Image
-        className="absolute top-[16px] left-[0px] w-full h-[400px] object-cover"
-        src={Image1}/>
-        <button className="absolute top-[360px] left-[1200px] w-[170px] h-[40px]  object-cover bg-gray-600 rounded-xl text-white">
-        <FontAwesomeIcon icon={faCameraRetro}  className=" w-[25px] h-[25px] text-white "/>
+       {isLoading ? (
+        // Vous pouvez afficher une image de chargement ici
+        // Par exemple :
+        // <div className="loading-spinner"></div>
+        // Ou simplement <div></div>
+        <div>Loading...</div>
+      ) : (
+        coverImage && (
+          <Image
+    className="absolute top-[16px] left-[0px] w-full h-[400px] object-cover"
+    src={coverImage ? coverImage : Image1}
+    width={400}
+    height={200}
+  />
+        )
+      )}
+
+      <input
+        type="file"
+        id="fileInput"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={handleImageChange}
+      />
+
+      <button
+        className="absolute top-[360px] left-[1200px] w-[170px] h-[40px] object-cover bg-gray-600 rounded-xl text-white cursor-pointer"
+        onClick={() => {
+          // Trigger the file input when the button is clicked
+          document.getElementById("fileInput").click();
+        }}
+      >
+        <FontAwesomeIcon icon={faCameraRetro} className="w-[25px] h-[25px] text-white" />
         <strong>Edit cover photo</strong>
-          </button>
+      </button>
+
         <div className="absolute top-[452px] left-[271px] text-[30px] tracking-[-0.02em] leading-[142.02%] font-medium opacity-[0.65]">
-          Kaoutar EL
+        {userInfo?.firstName} {userInfo?.surName}
         </div>
         <div className="absolute top-[550px] left-[58px]   w-[1280px] border-b border-gray-500"></div>
         <div className="absolute top-[566px] left-[58px] tracking-[-0.02em] leading-[142.02%] font-medium opacity-[0.65] border-b border-gray-600">
@@ -51,14 +140,46 @@ const Profile = () => {
           alt=""
           src="/3135823-5@2x.png"
         /> */}
-        <Image
+        {/* <Image
         className="absolute top-[354px] left-[90px] w-[160px] h-[156px] object-cover rounded-full"
-        src={Image2}/>
-        <button className="absolute top-[460px] left-[216px] w-[40px] h-[40px]  object-cover rounded-full bg-gray-600">
-        <FontAwesomeIcon icon={faCameraRetro}  className=" w-[25px] h-[25px] text-white "/>
-          </button>
+        src={profileImage ? profileImage : Image2}
+        width={160}
+        height={156}
+      /> */}
+        {isLoading ? (
+        // Vous pouvez afficher une image de chargement ici
+        // Par exemple :
+        // <div className="loading-spinner"></div>
+        // Ou simplement <div></div>
+        <div>Loading...</div>
+      ) : (
+        coverImage && (
+          <Image
+    className="absolute top-[354px] left-[90px] w-[160px] h-[156px] object-cover rounded-full"
+    src={profileImage ? profileImage : Image2}
+    width={160}
+    height={156}
+  />
+        )
+      )}
+      <input
+        type="file"
+        id="profileImageInput"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={handleProfileImageChange}
+      />
+
+      <button
+        className="absolute top-[460px] left-[216px] w-[40px] h-[40px] object-cover rounded-full bg-gray-600"
+        onClick={() => {
+          document.getElementById("profileImageInput").click();
+        }}
+      >
+        <FontAwesomeIcon icon={faCameraRetro} className="w-[25px] h-[25px] text-white" />
+      </button>
           <div>
-          <Information currentUserEmail={currentUserEmail}/>
+          <Information  userInfo={userInfo}/>
           <div className=' shadow-md bg-red-500  absolute top-[1060px] left-[58px] rounded-md p-4 w-[400px] h-[50px]'>Photos</div>
           <Photos/>
           <div className='bg-slate-400 shadow-lg  absolute top-[650px] left-[600px] rounded-md p-4 w-[600px] '>

@@ -7,8 +7,8 @@ import Header from "../components/Header";
 const Profil = () => {
   return (
     <div>
-      <Header />
-      <Profile />
+      {/* <Header/> */}
+      <Profile/>
     </div>
   );
 };
