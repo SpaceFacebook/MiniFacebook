@@ -19,34 +19,34 @@ import java.util.*;
 
 
 @RestController
-    @CrossOrigin(value="http://localhost:3000")
-    public class LoginController {
-        @Autowired
-        private UserRepository userRepository;
-        @Autowired
-        private AuthService authService;
+@CrossOrigin(value="http://localhost:3000")
+public class LoginController {
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private AuthService authService;
     private static final String BASE_URL = "http://localhost:8080/cover-images/"; // L'URL de base où sont stockées les images de couverture
     private static final String BASE_URL2 = "http://localhost:8080/profile-images/";
 
     @PostMapping("/api/login")
-        public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> loginRequest) {
-            String email = loginRequest.get("email");
-            String password = loginRequest.get("password");
+    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> loginRequest) {
+        String email = loginRequest.get("email");
+        String password = loginRequest.get("password");
 
-            Optional<User> userOptional = userRepository.findByEmail(email);
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                if (user.getPassword().equals(password)) {
-                    // Authentification réussie
-                    Map<String, String> response = new HashMap<>();
-                    response.put("message", "Login successful");
-                    response.put("userName", user.getFirstName()); // Ajoutez le nom de l'utilisateur
-                    return ResponseEntity.ok(response);
-                }
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (user.getPassword().equals(password)) {
+                // Authentification réussie
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "Login successful");
+                response.put("userName", user.getFirstName()); // Ajoutez le nom de l'utilisateur
+                return ResponseEntity.ok(response);
             }
-            // Authentification échouée
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "Login failed"));
         }
+        // Authentification échouée
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "Login failed"));
+    }
     @GetMapping("/api/userInfo")
     public ResponseEntity<User> getUserInfoByEmail(@RequestParam String userEmail) {
         Optional<User> userOptional = userRepository.findByEmail(userEmail);
@@ -77,7 +77,6 @@ import java.util.*;
                 String fileName =user.getId() + "_cover.jpg";
                 File imageFile = new File(COVER_IMAGE_UPLOAD_DIR, fileName);
                 coverImage.transferTo(imageFile);
-
                 // Update the user's cover image
                 user.setCoverImage(fileName);
                 userRepository.save(user);
@@ -125,5 +124,3 @@ import java.util.*;
 
 
 }
-
-
