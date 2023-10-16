@@ -11,6 +11,8 @@ import { addPost, selectPost } from "../public/src/features/postSlice";
 const Publish = ({ onClose }) => {
   const FACEBOOK_CLONE_ENDPOINT = "http://localhost:8080/api/v1/post"; 
   const inputRef = useRef(null);
+  
+  const userInfo = useSelector((state) => state.auth.userInfo);
   const hiddenFileInput = useRef(null);
   const [imageToPost,setImageToPost] = useState(null);
   const dispatch=useDispatch();
@@ -42,7 +44,7 @@ const Publish = ({ onClose }) => {
     formData.append("file", imageToPost);
     console.log("imagetopost: " + imageToPost);
     formData.append("post", inputRef.current.value);
-    formData.append("name", userName);
+    formData.append("name", userInfo.firstName ? userInfo.firstName : userName);
     formData.append("email", email);
     formData.append("image", imageToPost);
     formData.append("profilePic", imgProfile);
@@ -78,7 +80,7 @@ const Publish = ({ onClose }) => {
           ref={inputRef}
           className='rounded-lg h-2/4 focus:outline-none font-medium bg-gray-100 px-4 w-full text-darkslategray text-xl'
           style={{ border: 'none', background: 'none' }}
-          placeholder={`What’s in your mind, ${userName}?`}
+          placeholder={`What’s in your mind, ${userInfo.firstName ? userInfo.firstName : userName}?`}
         ></textarea>
           
           <form className="flex items-center">
