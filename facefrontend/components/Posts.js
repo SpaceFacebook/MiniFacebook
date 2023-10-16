@@ -3,12 +3,21 @@ import Post from './Post'
 import { useDispatch ,useSelector} from 'react-redux';
 import { addAllPost, selectPost } from "../public/src/features/postSlice";
 import axios from 'axios';
-
-
+import logochat from '../images/iconchatbot.svg'
+import Image from 'next/image';
+import {setShowChatBotSection} from "../public/src/features/postSlice"
+import Chatbot from './chatbot';
 const Posts = ({ currentUserEmail,userPerformed }) => {
   const dispatch = useDispatch();
   const posts = useSelector(selectPost);
   const [userPosts, setUserPosts] = useState([]);
+  const [showChatBot, setShowChatBot] = useState(false); // État pour gérer la visibilité du Chatbot
+
+ 
+  const handleshowchat = () => {
+    // Définissez l'état pour afficher ou masquer le Chatbot
+    setShowChatBot(!showChatBot);
+  };
   useEffect(() => {
     const FACEBOOK_CLONE_ENDPOINT = "http://localhost:8080/api/v1/post";
     const fetchData = () => {
@@ -53,7 +62,13 @@ const Posts = ({ currentUserEmail,userPerformed }) => {
           <Post key={post.id} post={post} />
         ))
       )}
-      
+       <div className="fixed bottom-10 right-10 w-30 h-30" onClick={()=>handleshowchat()}>
+       <div style={{ position: 'fixed', bottom: '400px', right: '20px' }}>
+    <Image src={logochat} alt="logochat" onClick={() => handleshowchat()} />
+  </div>
+      </div>
+      {showChatBot && <Chatbot />}
+    
     </div>
   );
 };

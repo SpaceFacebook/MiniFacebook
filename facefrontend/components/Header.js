@@ -7,10 +7,17 @@ import { useRouter } from 'next/router';
 import { setLoggedOut } from '../public/src/features/loginSlice'
 const Header = () => {
   const userName = useSelector((state) => state.auth.userName);
+
+  const userInfo = useSelector((state) => state.auth.userName);
+
   const currentUserEmail=useSelector((state)=>state.auth.email);
   const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
   const [dropdownVisible, setDropdownVisible] = useState(false);
+
+
+
   const router = useRouter();
   const dispatch = useDispatch();
   const handleProfil=()=>{
@@ -45,6 +52,7 @@ const Header = () => {
       <div className="flex">
         <Image src={logo} height={100} width={260} onClick={handlePagehome} alt="image logo" />
       </div>
+
       <div className="flex items-center space-x-2 relative">
         {isLoading ? (
           <div>Loading...</div>
@@ -85,6 +93,29 @@ const Header = () => {
         )}
       </div>
     </div>
+      <div className="flex items-center space-x-2">
+      {isLoading ? (
+  <div>Loading...</div>
+) : (
+ 
+  <Image
+    src={profileImage}
+    height={40}
+    width={40}
+    className="object-cover rounded-full"
+    onClick={handleProfil}
+  />
+
+ <span className="font-bold ml-2">
+  {userInfo.firstName ? userInfo.firstName : userName}
+</span>
+
+
+  )}
+  
+
+</div>
+</div>
   );
 };
 export default Header;

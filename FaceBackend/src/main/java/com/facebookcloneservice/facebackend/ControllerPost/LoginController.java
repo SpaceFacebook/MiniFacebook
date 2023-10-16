@@ -120,7 +120,7 @@ public class LoginController {
             return new ResponseEntity<>("Failed to update the profile image", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    // Add a new endpoint for updating user details
+
     @PostMapping("/api/updateUserInfo")
     public ResponseEntity<String> updateUserInfo(@RequestParam Long id, @RequestBody User updatedUser) {
         try {
@@ -138,6 +138,7 @@ public class LoginController {
                 // Save the updated user information
                 userRepository.save(user);
 
+
                 return new ResponseEntity<>("User information updated successfully", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
@@ -148,6 +149,15 @@ public class LoginController {
         }
     }
 
+                return new ResponseEntity<>("User information updated successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Failed to update user information", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }

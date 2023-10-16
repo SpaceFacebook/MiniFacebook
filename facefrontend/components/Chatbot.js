@@ -1,15 +1,15 @@
-import { useState } from 'react'
+import React, { useState } from 'react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
+import Image from 'next/image';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator } from '@chatscope/chat-ui-kit-react';
-import React from 'react'
-
+import logochat from '../images/iconchatbot.svg'
 const Chatbot = () => {
-const API_KEY = "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";
-// "Explain things like you would to a 10 year old learning how to code."
-const systemMessage = { //  Explain things like you're talking to a software professional with 5 years of experience.
-  "role": "system", "content": "Explain things like you're talking to a software professional with 2 years of experience."
-}
 
+  const API_KEY = "AIzaSyBHFuhyyZ9eIaDl9GGqEn8jCTrXzwU4uec"; // Remplacez par votre clé API Google Cloud
+  const systemMessage = {
+    "role": "system",
+    "content": "Explain things like you're talking to a software professional with 2 years of experience."
+  };
 
   const [messages, setMessages] = useState([
     {
@@ -28,82 +28,72 @@ const systemMessage = { //  Explain things like you're talking to a software pro
     };
 
     const newMessages = [...messages, newMessage];
-    
     setMessages(newMessages);
 
-    // Initial system message to determine ChatGPT functionality
-    // How it responds, how it talks, etc.
     setIsTyping(true);
     await processMessageToChatGPT(newMessages);
   };
 
-  async function processMessageToChatGPT(chatMessages) { // messages is an array of messages
-    // Format messages for chatGPT API
-    // API is expecting objects in format of { role: "user" or "assistant", "content": "message here"}
-    // So we need to reformat
-
-    let apiMessages = chatMessages.map((messageObject) => {
-      let role = "";
-      if (messageObject.sender === "ChatGPT") {
-        role = "assistant";
-      } else {
-        role = "user";
-      }
-      return { role: role, content: messageObject.message}
-    });
-
-
-    // Get the request body set up with the model we plan to use
-    // and the messages which we formatted above. We add a system message in the front to'
-    // determine how we want chatGPT to act. 
+  async function processMessageToChatGPT(chatMessages) {
     const apiRequestBody = {
-      "model": "gpt-3.5-turbo",
-      "messages": [
-        systemMessage,  // The system message DEFINES the logic of our chatGPT
-        ...apiMessages // The messages from our chat with ChatGPT
-      ]
-    }
-
-    await fetch("https://api.openai.com/v1/chat/completions", 
-    {
+      "prompt": {
+        "text": chatMessages[chatMessages.length - 1].message
+      }
+    };
+  
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta3/models/text-bison-001:generateText?key=${API_KEY}`, {
       method: "POST",
       headers: {
-        "Authorization": "Bearer " + API_KEY,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(apiRequestBody)
-    }).then((data) => {
-        console.log(data);
-      
-        if (data.choices && data.choices[0] && data.choices[0].message) {
-          setMessages([...chatMessages, {
-            message: data.choices[0].message.content,
-            sender: "ChatGPT"
-          }]);
-        } else {
-          console.error("Invalid API response:", data);
-        }
-      
-        setIsTyping(false);
-      });}
+    });
+  
+    if (response.ok) {
+      const data = await response.json();
+      if (data.candidates && data.candidates[0] && data.candidates[0].output) {
+        setMessages([...chatMessages, {
+          message: data.candidates[0].output,
+          sender: "ChatGPT"
+        }]);
+      } else {
+        console.error("Réponse API invalide : pas de texte trouvé dans la réponse.");
+      }
+    } else {
+      console.error("Erreur de l'API :", response.status, response.statusText);
+    }
+  
+    setIsTyping(false);
+  }
+  
+  
+
   return (
-    <div style={{ position:"relative", height: "800px", width: "700px"  }}>
-    <MainContainer>
-      <ChatContainer>       
-        <MessageList 
-          scrollBehavior="smooth" 
-          typingIndicator={isTyping ? <TypingIndicator content="ChatGPT is typing" /> : null}
-        >
-          {messages.map((message, i) => {
-            console.log(message)
-            return <Message key={i} model={message} />
-          })}
-        </MessageList>
-        <MessageInput placeholder="Type message here" onSend={handleSend} />        
-      </ChatContainer>
-    </MainContainer>
-  </div>
-  )
+    
+    <div className="fixed bottom-10 right-4 sm:right-10 sm:bottom-10 w-72 h-100 sm:w-96 sm:h-96 bg-white rounded-lg border border-gray-300 p-4">
+      <div className="mb-4 flex items-center ">
+        <Image src={logochat} alt="Chatbot" className="w-10 h-10 mr-2 rounded-full" />
+        <div>
+          <div className="text-xl font-semibold">Chatbot</div>
+          <div className="text-gray-500">Your friendly assistant</div>
+        </div>
+      </div>
+        
+      <MainContainer>
+        <ChatContainer>
+          <MessageList
+            scrollBehavior="smooth"
+            typingIndicator={isTyping ? <TypingIndicator content="ChatGPT is typing" /> : null}
+          >
+            {messages.map((message, i) => {
+              return <Message key={i} model={message} />;
+            })}
+          </MessageList>
+          <MessageInput placeholder="Type message here" onSend={handleSend} />
+        </ChatContainer>
+      </MainContainer>
+    </div>
+  );
 }
 
-export default Chatbot
+export default Chatbot;

@@ -5,6 +5,8 @@ import {
   setEmail,
   setPassword,
   resetAuth,
+  setFirstName,
+  setUserInfo,
 } from '../public/src/features/loginSlice';
 import imageLogin from '../images/imagelogin.png';
 import Image from 'next/image';
@@ -22,6 +24,7 @@ const Login = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [errors, setErrors] = useState({});
   const { email, password } = useSelector((state) => state.auth);
+  const [loginError, setLoginError] = useState(null);
   const router = useRouter();
   const handleCreateAccountClick = () => {
     setShowRegisterModal(true);
@@ -71,14 +74,21 @@ const Login = () => {
       if (response.status === 200) {
         const { userName } = response.data;
         dispatch(setUserName(userName));
+        dispatch(setFirstName(userName))
         dispatch(setLoggedIn());
         router.push('/home');
         console.log('Login successful');
       } else {
+       
         dispatch(setLoggedOut());
         console.error('Login failed');
+        
+       
       }
     } catch (error) {
+      setLoginError('Login failed. Please check your credentials.');
+      dispatch(setEmail(""));
+      dispatch(setPassword(""));
       console.error('Error:', error);
     }
   };
@@ -120,6 +130,7 @@ const Login = () => {
             <div className="text-red-500 text-sm">{errors.password}</div>
           )}
         </div>
+        <p className="text-red-500 text-sm">{loginError}</p>
         <button
           onClick={handleLogin}
           className="bg-blue-500 text-white py-2 px-4 rounded-md font-medium w-full hover:bg-blue-600"
