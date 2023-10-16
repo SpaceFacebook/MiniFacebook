@@ -40,6 +40,7 @@ const RegisterModal = ({ onClose }) => {
     selectedMonth,
     selectedYear,
   } = useSelector((state) => state.auth);
+  const [error, setemailExistsError] = useState({ emailExistsError: '' });
 
   const [errors, setErrors] = useState({});
 
@@ -111,6 +112,22 @@ const RegisterModal = ({ onClose }) => {
         console.error('Registration failed');
       }
     } catch (error) {
+      if (error.response && error.response.status === 409) {
+        // Email exists error
+        setemailExistsError({ emailExistsError: 'Email already exists. Please use a different email.' });
+        // Réinitialisation des champs
+      /*dispatch(setEmail(''));
+      dispatch(setPassword(''));
+      dispatch(setFirstName(''));
+      dispatch(setSurName(''));
+      dispatch(setGender(''));
+      dispatch(setSelectedDay(''));
+      dispatch(setSelectedMonth(''));
+      dispatch(setSelectedYear(''));*/
+        console.log('error',error)
+      } else {
+        console.error('Error:', error);
+      }
       console.error('Error:', error);
     }
   };
@@ -241,6 +258,9 @@ const RegisterModal = ({ onClose }) => {
                   <div className="text-red-500 text-sm">{errors.dateBirth}</div>
                 )}
               </div>
+              {error.emailExistsError && (
+  <div className="text-red-500 text-sm">{error.emailExistsError}</div>
+)}
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
                 onClick={handleRegister}

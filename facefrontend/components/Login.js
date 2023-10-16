@@ -5,6 +5,8 @@ import {
   setEmail,
   setPassword,
   resetAuth,
+  setFirstName,
+  setUserInfo,
 } from '../public/src/features/loginSlice';
 import imageLogin from '../images/imagelogin.png';
 import Image from 'next/image';
@@ -72,6 +74,7 @@ const Login = () => {
       if (response.status === 200) {
         const { userName } = response.data;
         dispatch(setUserName(userName));
+        dispatch(setFirstName(userName))
         dispatch(setLoggedIn());
         router.push('/');
         console.log('Login successful');

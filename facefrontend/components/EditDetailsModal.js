@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Modal from 'react-modal'; // Assurez-vous d'installer cette bibliothèque
+import { useDispatch } from 'react-redux';
+import { setUserInfo,setFirstName, setUserName } from '../public/src/features/loginSlice';
 
-function EditDetailsModal({ isOpen, onRequestClose, userInfo }) {
+ const EditDetailsModal=({ isOpen, onRequestClose, userInfo, onRequestUpdateUserInfo })=> {
+  const dispatch=useDispatch();
+
   const [updatedUserInfo, setUpdatedUserInfo] = useState(userInfo);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -13,11 +18,30 @@ function EditDetailsModal({ isOpen, onRequestClose, userInfo }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Envoyez les données mises à jour au backend ici
-    // Assurez-vous que `updatedUserInfo` contient les données mises à jour
-    // Après avoir traité la mise à jour, vous pouvez fermer le modal en appelant `onRequestClose`
+
+    // Include the user's ID in the URL
+    const updateUrl = `http://localhost:8080/api/updateUserInfo?id=${updatedUserInfo.id}`;
+
+    // Send the updated user information to the backend
+    axios.post(updateUrl, updatedUserInfo)
+      .then((response) => {
+        // Handle success, e.g., show a success message
+        console.log('User information updated successfully', response.data);
+        //dispatch(setUserresponse.data)
+         dispatch(setUserInfo(updatedUserInfo));
+         dispatch(setFirstName(updatedUserInfo.firstName))
+         dispatch(setUserName(updatedUserInfo.firstName))
+        onRequestUpdateUserInfo(updatedUserInfo);
+        onRequestClose();
+      })
+      .catch((error) => {
+        // Handle error, e.g., show an error message
+        console.error('Error updating user information', error);
+      });
+
+    // Close the modal
     onRequestClose();
-  }
+  };
 
   return (
     <Modal
@@ -59,13 +83,23 @@ function EditDetailsModal({ isOpen, onRequestClose, userInfo }) {
                   className="border rounded-lg px-4 py-2 w-full"
                 />
               </div>
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={updatedUserInfo.email}
+                  onChange={handleInputChange}
+                  className="border rounded-lg px-4 py-2 w-full"
+                />
+              </div>
 
               <div className="mb-4">
                 <label htmlFor="dateBirth" className="block text-sm font-medium text-gray-700">Date of Birth</label>
                 <input
                   type="text"
                   name="dateBirth"
-                  value={updatedUserInfo.dateBirth}
+                  value={new Date(updatedUserInfo.dateBirth).toLocaleDateString()}
                   onChange={handleInputChange}
                   className="border rounded-lg px-4 py-2 w-full"
                 />
@@ -73,39 +107,40 @@ function EditDetailsModal({ isOpen, onRequestClose, userInfo }) {
               <div className="mb-4">
                 <label htmlFor="gender" className="block text-sm font-medium text-gray-700">Gender</label>
                 <div className="flex">
-                  <label className="mr-4">
-                    <input
-                      type="radio"
-                      name="gender"
-                      value="female"
-                      checked={updatedUserInfo.gender === "FEMALE"}
-                      onChange={handleInputChange}
-                      className="mr-2"
-                    />
-                    Female
-                  </label>
-                  <label className="mr-4">
-                    <input
-                      type="radio"
-                      name="gender"
-                      value="male"
-                      checked={updatedUserInfo.gender === "MALE"}
-                      onChange={handleInputChange}
-                      className="mr-2"
-                    />
-                    Male
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="gender"
-                      value="custom"
-                      checked={updatedUserInfo.gender === "CUSTOM"}
-                      onChange={handleInputChange}
-                      className="mr-2"
-                    />
-                    Custom
-                  </label>
+                <label className="mr-4">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="FEMALE"
+                    checked={updatedUserInfo.gender === "FEMALE"}
+                    onChange={handleInputChange}
+                    className="mr-2"
+                  />
+                  Female
+                </label>
+                <label className="mr-4">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="MALE"
+                    checked={updatedUserInfo.gender === "MALE"}
+                    onChange={handleInputChange}
+                    className="mr-2"
+                  />
+                  Male
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="CUSTOM"
+                    checked={updatedUserInfo.gender === "CUSTOM"}
+                    onChange={handleInputChange}
+                    className="mr-2"
+                  />
+                  Custom
+                </label>
+
                 </div>
               </div>
 

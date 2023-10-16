@@ -6,9 +6,13 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 const Header = () => {
   const userName = useSelector((state) => state.auth.userName);
+
+  const userInfo = useSelector((state) => state.auth.userName);
+
   const currentUserEmail=useSelector((state)=>state.auth.email);
   const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
   const router = useRouter();
   const handleProfil=()=>{
     router.push('/profil');
@@ -49,8 +53,15 @@ const Header = () => {
     className="object-cover rounded-full"
     onClick={handleProfil}
   />
+
+ <span className="font-bold ml-2">
+  {userInfo.firstName ? userInfo.firstName : userName}
+</span>
+
+
   )}
-  <span className="font-bold ml-2">{userName}</span>
+  
+
 </div>
 </div>
   );

@@ -9,9 +9,12 @@ import Posts from './Posts'
 import CreatePost from "./CreatePost";
 import Photos from "./Photos";
 import { requireAuth } from "../auth/customRouter";
+import { useDispatch } from "react-redux";
+import {setUserInfo,setFirstName,setSurName, setUserName} from '../public/src/features/loginSlice';
 const Profile = () => {
   const currentUserEmail = useSelector((state) => state.auth.email);
-  const [userInfo, setUserInfo] = useState(null);
+  const userInfo=useSelector((state)=>state.auth.userInfo);
+  const dispatch=useDispatch();
   const [coverImage, setCoverImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -58,7 +61,10 @@ const Profile = () => {
     axios
       .get(USER_INFO_URL)
       .then((response) => {
-        setUserInfo(response.data);
+        dispatch(setUserInfo(response.data));
+        //dispatch(setFirstName(userInfo.firstName));
+        dispatch(setSurName(userInfo.surName));
+        //dispatch(setUserName(userInfo.firstName))
         setCoverImage(response.data.coverImage);
         setProfileImage(response.data.profileImage);
         setIsLoading(false);
@@ -166,11 +172,11 @@ const Profile = () => {
         <FontAwesomeIcon icon={faCameraRetro} className="w-[25px] h-[25px] text-white" />
       </button>
           <div>
-          <Information  userInfo={userInfo}/>
+          <Information  />
           <div className=' shadow-md bg-red-500  absolute top-[1060px] left-[58px] rounded-md p-4 w-[400px] h-[50px]'>Photos</div>
           <Photos/>
           <div className='bg-slate-400 shadow-lg  absolute top-[650px] left-[600px] rounded-md p-4 w-[600px] '>
-            <CreatePost/>
+            {/* <CreatePost/> */}
             <Posts currentUserEmail={currentUserEmail} userPerformed={true}/>
           </div>
           

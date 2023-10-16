@@ -9,10 +9,14 @@ const authSlice = createSlice({
     userName: '', // Ajoutez une nouvelle propriété pour stocker le nom de l'utilisateur
     firstName:'',
     surName:'',
+    userInfo: '',
   },
   reducers: {
     setEmail: (state, action) => {
       state.email = action.payload;
+    },
+    setUserInfo: (state, action) => {
+      state.userInfo = action.payload;
     },
     setPassword: (state, action) => {
       state.password = action.payload;
@@ -64,6 +68,7 @@ export const {
   setSelectedDay,
   setSelectedMonth,
   setSelectedYear,
+  setUserInfo,
 } = authSlice.actions;
 
 export default authSlice.reducer;

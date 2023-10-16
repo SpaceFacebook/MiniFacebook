@@ -14,16 +14,23 @@ import Publish from './Publish';
 
 const CreatePost = () => {
   //const {data: session } =useSession();
+
+  const userInfo=useSelector((state)=>state.auth.userInfo);
+  const userName = useSelector((state) => state.auth.userName);
+  
+ 
+
   const currentUserEmail=useSelector((state)=>state.auth.email);
   const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.post.isOpen);
   const inputRef = useRef(null);
-  const userName = useSelector((state) => state.auth.userName);
+ 
 
   const email = useSelector((state) => state.auth.email);
-  console.log("hi email from me: ",userName)
+  console.log("hi email from me: ",userInfo)
   const handleClick = () => {
     hiddenFileInput.current.click();
   };
@@ -56,11 +63,11 @@ const CreatePost = () => {
     formData.append("file", imageToPost);
     console.log("imagetopost: " + imageToPost);
     formData.append("post", inputRef.current.value);
-    formData.append("name", userName);
-    formData.append("email", email);
-    console.log("emaillllllll hi : ",email)
+    formData.append("name", userInfo.firstName);
+    formData.append("email", userInfo.email);
+    console.log("emaillllllll hi : ",userInfo.email)
     formData.append("image", imageToPost);
-    formData.append("profilePic", imgProfile);
+    formData.append("profilePic", userInfo.imgProfile);
 
     axios
       .post(FACEBOOK_CLONE_ENDPOINT, formData, {
@@ -115,7 +122,7 @@ const CreatePost = () => {
               type="text"
              
               className='rounded-full h-12 focus:outline-none font-medium bg-gray-100 px-4 flex-1'
-              placeholder={`What's on your mind, ${userName}?`}
+              placeholder={`What's on your mind, ${userInfo.firstName+" "+userInfo.surName ? userInfo.firstName : userName}?`}
             />
             
           </form>
@@ -124,7 +131,7 @@ const CreatePost = () => {
             <div
               
               className="cursor-pointer hover:bg-gray-100 rounded-md p-1">
-              <IoMdPhotos className="text-green-500" size={20} />
+              <IoMdPhotos className="text-blue-500" size={20} />
               
             </div>
           </div>
