@@ -6,7 +6,8 @@ export const postSlice = createSlice({
         value:[],
         isOpen: false,
         showCommentSection:false,
-        showchatbotsection:false
+        showchatbotsection:false,
+        showChatBot : false,
     },
     reducers:{
         addPost:(state,action)=>{
@@ -18,8 +19,11 @@ export const postSlice = createSlice({
         openModal: (state) => {
             state.isOpen = true;
           },
-          closeModal: (state) => {
-            state.isOpen = false;
+          setshowChatBot:(state,action)=>{
+            state.showChatBot=action.payload;
+          },
+          closeModal: (state, action) => {
+            state.isOpen =action.payload;
           },
           setShowCommentSection:(state)=>{
             state.showCommentSection = true;
@@ -31,7 +35,7 @@ export const postSlice = createSlice({
 
 
 })
-export const {addPost,addAllPost, openModal, closeModal,setShowCommentSection,setShowChatBotSection}= postSlice.actions;
+export const {addPost,addAllPost, openModal, closeModal,setShowCommentSection,setShowChatBotSection,setshowChatBot}= postSlice.actions;
 export const selectPost=(state)=> state.post.value;
 
 export default postSlice.reducer;

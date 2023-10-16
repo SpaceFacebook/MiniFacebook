@@ -1,29 +1,37 @@
-import React,{useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import Image from 'next/image';
-import logo from '../images/logoMiniFacebook.png';
-import { useSelector, useDispatch } from 'react-redux';
+import logo from '../images/logo11.png';
+import { useSelector,useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import logochat from '../images/logochatbot1.png'
+import { setshowChatBot } from '../public/src/features/postSlice';
 import { setLoggedOut } from '../public/src/features/loginSlice'
+
 const Header = () => {
   const userName = useSelector((state) => state.auth.userName);
-
-  const userInfo = useSelector((state) => state.auth.userName);
-
-  const currentUserEmail=useSelector((state)=>state.auth.email);
+  const router = useRouter();
+  const showChatBot=useSelector((state)=>state.post.showChatBot);
+  const dispatch=useDispatch();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-
-
-
-  const router = useRouter();
-  const dispatch = useDispatch();
+  const currentUserEmail=useSelector((state)=>state.auth.email);
+  const handleshowchat = () => {
+    // Définissez l'état pour afficher ou masquer le Chatbot
+    dispatch(setshowChatBot(!showChatBot));
+  }
   const handleProfil=()=>{
     router.push('/profil');
   }
-
+  const handlePagehome=()=>{
+    router.push('/home');
+  }
+  const handleLogout = () => {
+    // Effectuez ici les actions nécessaires pour la déconnexion, par exemple, vider le state Redux, supprimer les cookies de session, etc.
+    dispatch(setLoggedOut());
+    router.push('/login'); // Redirigez l'utilisateur vers la page de connexion après la déconnexion.
+  };
   useEffect(() => {
     const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
 
@@ -39,30 +47,26 @@ const Header = () => {
         setIsLoading(false);
       });
   }, [currentUserEmail]);
-  const handlePagehome=()=>{
-    router.push('/home');
-  }
-  const handleLogout = () => {
-    // Effectuez ici les actions nécessaires pour la déconnexion, par exemple, vider le state Redux, supprimer les cookies de session, etc.
-    dispatch(setLoggedOut());
-    router.push('/login'); // Redirigez l'utilisateur vers la page de connexion après la déconnexion.
-  };
   return (
-    <div className="bg-white p-2 shadow-md top-0 sticky z-50 h-16 flex justify-between items-center">
+    <div className="bg-blue-500 p-2 shadow-md top-0 sticky z-50 h-16 flex justify-between items-center">
       <div className="flex">
-        <Image src={logo} height={100} width={260} onClick={handlePagehome} alt="image logo" />
+        <Image src={logo} height={100} width={260}  onClick={handlePagehome}/>
       </div>
-
-      <div className="flex items-center space-x-2 relative">
-        {isLoading ? (
+      <div className="flex  items-center space-x-2">
+      {isLoading ? (
           <div>Loading...</div>
         ) : (
           <>
+           <div onClick={()=>handleshowchat()} className="flex items-center">
+       <div style={{ width:'45px',height:'20px', marginBottom:"20px"}}>
+    <Image src={logochat} alt="logochat" onClick={() => handleshowchat()} />
+  </div></div>
             <div
               className="relative inline-block group"
               onMouseEnter={() => setDropdownVisible(true)}
               onMouseLeave={() => setDropdownVisible(false)}
             >
+              
               <Image
                 src={profileImage}
                 height={40}
@@ -88,34 +92,13 @@ const Header = () => {
                 </div>
               )}
             </div>
-            <span className="font-bold ml-2">{userName}</span>
+            <span className="font-bold ml-2 text-white">{userName}</span>
+           
           </>
         )}
-      </div>
-    </div>
-      <div className="flex items-center space-x-2">
-      {isLoading ? (
-  <div>Loading...</div>
-) : (
- 
-  <Image
-    src={profileImage}
-    height={40}
-    width={40}
-    className="object-cover rounded-full"
-    onClick={handleProfil}
-  />
-
- <span className="font-bold ml-2">
-  {userInfo.firstName ? userInfo.firstName : userName}
-</span>
-
-
-  )}
-  
-
 </div>
 </div>
   );
 };
+
 export default Header;

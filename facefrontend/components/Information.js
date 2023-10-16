@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import EditDetailsModal from './EditDetailsModal';
 
 import { useSelector } from 'react-redux/es/hooks/useSelector';
@@ -30,7 +31,7 @@ const Information=()=> {
 
 
   return (
-    <div className="shadow-md bg-slate-400 absolute top-[650px] left-[58px] rounded-md p-4 w-[400px] h-[400px]">
+    <div className="shadow-md bg-slate-100 absolute top-[650px] left-[58px] rounded-md p-4 w-[400px] h-[400px]">
       <strong className="mb-5">Intro</strong>
       {userInfo ? (
         <>

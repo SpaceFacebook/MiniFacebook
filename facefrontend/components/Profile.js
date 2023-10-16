@@ -153,9 +153,8 @@ const Profile = () => {
       </button>
           <div>
           <Information  />
-          <div className=' shadow-md bg-red-500  absolute top-[1060px] left-[58px] rounded-md p-4 w-[400px] h-[50px]'>Photos</div>
           <Photos/>
-          <div className='bg-slate-400 shadow-lg  absolute top-[650px] left-[600px] rounded-md p-4 w-[600px] '>
+          <div className='bg-slate-100 shadow-lg  absolute top-[650px] left-[600px] rounded-md p-4 w-[600px] '>
             {/* <CreatePost/> */}
             <Posts currentUserEmail={currentUserEmail} userPerformed={true}/>
           </div>
