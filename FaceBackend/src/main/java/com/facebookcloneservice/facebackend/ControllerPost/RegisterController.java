@@ -39,7 +39,13 @@ public class RegisterController {
         newUser.setPassword(user.getPassword());
         newUser.setGender(user.getGender());
         newUser.setDateBirth(user.getDateBirth());
-
+        newUser.setCoverImage("inconnu_coverture.png");
+        if("FEMALE".equals(user.getGender().toString())) {
+            System.out.println("user gender: "+user.getGender());
+            newUser.setProfileImage("inconnu_femme.jpg");
+        }else {
+            newUser.setProfileImage("inconnu_man.jpg");
+        }
         // Save the new user to the database
         userRepository.save(newUser);
 
