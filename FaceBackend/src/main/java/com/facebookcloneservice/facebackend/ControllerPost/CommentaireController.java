@@ -5,8 +5,10 @@ import com.facebookcloneservice.facebackend.entityPost.User;
 import com.facebookcloneservice.facebackend.servicepost.AuthService;
 import com.facebookcloneservice.facebackend.servicepost.CommentaireService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(value="http://localhost:3000")
@@ -26,7 +28,8 @@ public class CommentaireController {
         if (user != null) {
             // Set the user in the Commentaire entity
             commentaire.setUser(user);
-
+            /*commentaire.setDateCommentaire(new Date());
+            System.out.println(commentaire.getDateCommentaire());*/
             // Save the comment
             System.out.println("commentaire : " + commentaire.getContenu() + " ");
             return commentaireService.ajouterCommentaire(commentaire);
@@ -41,6 +44,11 @@ public class CommentaireController {
         List<Commentaire> commentaires = commentaireService.obtenirCommentairesPourPost(postId);
         System.out.println("Nombre de commentaires récupérés : " + commentaires.size());
         return commentaires;
+    }
+    @GetMapping("/post/{postId}/commentCount")
+    public ResponseEntity<Integer> getCommentCountForPost(@PathVariable String postId) {
+        int commentCount = commentaireService.getCommentCountForPost(postId); // Remplacez cela par l'appel à votre service de commentaires pour obtenir le nombre de commentaires pour ce post
+        return ResponseEntity.ok(commentCount);
     }
 
 

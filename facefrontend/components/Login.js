@@ -72,7 +72,7 @@ const Login = () => {
         const { userName } = response.data;
         dispatch(setUserName(userName));
         dispatch(setLoggedIn());
-        router.push('/');
+        router.push('/home');
         console.log('Login successful');
       } else {
         dispatch(setLoggedOut());
@@ -89,7 +89,7 @@ const Login = () => {
         <div className="mb-4 text-center">
           <Image src={imageLogin} alt="Istockphoto" width={200} height={200} />
           <div className="text-2xl font-bold">
-            <Image src={logo} />
+            <Image src={logo} alt="image logo" />
           </div>
         </div>
         <div className="mb-4">

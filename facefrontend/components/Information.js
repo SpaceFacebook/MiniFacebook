@@ -1,28 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import EditDetailsModal from './EditDetailsModal';
 function Information({ currentUserEmail, userInfo }) {
-  // const [userInfo, setUserInfo] = useState(null);
   console.log("email from backend: ",currentUserEmail)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // useEffect(() => {
-  //   const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
-
-  //   axios
-  //     .get(USER_INFO_URL)
-      
-  //     .then((response) => {
-  //       setUserInfo(response.data);
-  //       // console.log("data from backend :",userInfo)
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error fetching user information:', error);
-  //     });
-  // }, [currentUserEmail]);
  
 // Function to open the modal
 const openModal = () => {
   setIsModalOpen(true);
+};
+const handleUpdateUserInfo = (updatedUserInfo) => {
+  // Update user information in your application state
+  setUser(updatedUserInfo);
 };
   return (
     <div className='shadow-md bg-slate-400 absolute top-[650px] left-[58px] rounded-md p-4 w-[400px] h-[400px]'>
@@ -36,7 +24,7 @@ const openModal = () => {
           <br/>
           <p>Email: {userInfo.email}</p>
           <br/>
-          <p>Date of birth: {userInfo.dateBirth}</p>
+          <p>Date of birth: {new Date(userInfo.dateBirth).toLocaleDateString()}</p>
           <br/>
           <p>Gender: {userInfo.gender}</p>
           <br/>
@@ -55,9 +43,9 @@ const openModal = () => {
           isOpen={isModalOpen}
           onRequestClose={() => setIsModalOpen(false)} // Function to close the modal
           userInfo={userInfo} // Pass the user information to the modal
+          onRequestUpdateUserInfo={handleUpdateUserInfo}
         />
       )}
-      {console.log("userInformation que je veux passe au editmodal ",userInfo)}
       
     </div>
   );

@@ -15,7 +15,6 @@ const Posts = ({ currentUserEmail,userPerformed }) => {
       const response = axios
         .get(FACEBOOK_CLONE_ENDPOINT)
         .then((response) => {
-          console.log(response.data);
           dispatch(addAllPost(response.data));
           
         })

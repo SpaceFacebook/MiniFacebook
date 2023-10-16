@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios';
-import imgProfile from '../images/man.png';
 import Image from 'next/image';
 import {setShowCommentSection} from "../public/src/features/postSlice"
 import { useDispatch } from 'react-redux';
@@ -8,7 +7,7 @@ import { useSelector } from 'react-redux';
 import CommentSection from './CommentSection';
 import { FaComment } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faThumbsDown, faEllipsisV, faTrash } from '@fortawesome/free-solid-svg-icons';
 const Post = ({ post }) => {
   const [reactionType, setReactionType] = useState('');
   const [likeCount, setLikeCount] = useState(0);
@@ -16,18 +15,52 @@ const Post = ({ post }) => {
   const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activePostId, setActivePostId] = useState(null);
-
+  const [commentCount, setCommentCount] = useState(0);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
+  const toggleMenu = () => {
+    setIsMenuVisible(!isMenuVisible);
+  };
   const showCommentSection = useSelector((state) => state.post.showCommentSection);
   const email=useSelector((state)=>state.auth.email);
   const dispatch = useDispatch();
-  const handleCommentButtonClick = (postId) => {
+  const handleCommentButtonClick = async(postId) => {
     if (postId === activePostId) {
       setActivePostId(null);
+      await fetchCommentCount(postId);
     } else {
       setActivePostId(postId);
     }
     dispatch(setShowCommentSection());
   };
+  const handleDeletePost = async (postId) => {
+    // Vérifiez si l'utilisateur est l'auteur de la publication
+    if (post.email === email) {
+      try {
+        const response = await fetch(`http://localhost:8080/api/v1/post/deletePost/${postId}?userEmail=${email}`, {
+          method: 'DELETE',
+        });
+  
+        if (response.status === 200) {
+          setIsDeleted(true);
+          console.log('Publication supprimée avec succès');
+        } else {
+          console.error('Échec de la suppression de la publication');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la suppression de la publication : ', error);
+      }
+    } else {
+      console.error('Vous n\'êtes pas autorisé à supprimer cette publication.');
+    }
+  };
+  useEffect(() => {
+    fetchCommentCount(post.id);
+    const interval = setInterval(() => {
+      fetchCommentCount(post.id);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [post.id]);
   const handleReactionClick = async (postId, reactionType) => {
     try {
       const reactionData = {
@@ -56,6 +89,18 @@ const Post = ({ post }) => {
       }
     
   };
+  // Fonction pour obtenir le nombre de commentaires pour le poste
+  const fetchCommentCount = async (postId) => {
+    try {
+        const response = await fetch(`http://localhost:8080/api/commentaires/post/${postId}/commentCount`);
+        if (response.status === 200) {
+            const data = await response.json();
+            setCommentCount(data);
+        }
+    } catch (error) {
+      console.error('Erreur lors de la récupération du nombre de commentaires : ', error);
+    }
+  };
   const fetchReactionCount = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/reaction/${post.id}/reaction-count`);
@@ -76,7 +121,6 @@ const Post = ({ post }) => {
       .then((response) => {
         setProfileImage(response.data.profileImage);
         setIsLoading(false);
-        // console.log("userInfo: ",userInfo)
       })
       .catch((error) => {
         console.error('Error fetching user information:', error);
@@ -84,14 +128,13 @@ const Post = ({ post }) => {
       });
   }, [post.email]);
   useEffect(() => {
-    // Appeler la fonction pour obtenir le nombre de réactions lorsque le composant se monte
     fetchReactionCount();
   }, []);
 
-  return  (
+  return isDeleted ? null : (
     <div className='flex flex-col' key={post.id}>
-      <div className='bg-white mt-6 rounded-md p-4'>
-        <div className="flex items-center space-x-2">
+      <div className='bg-white mt-6 rounded-md p-4 relative'>
+        <div className="flex items-center space-x-2 ">
         {isLoading ? (
   <div>Loading...</div>
 ) : (
@@ -101,12 +144,34 @@ const Post = ({ post }) => {
     height={40}
     width={40}
     className="object-cover rounded-full"
+    alt="image profile"
   />
   )}
           <div>
             <p className='font-medium'>{post.name}</p>
             <p className="text-xs text-gray-500">{post.timeStamp}</p>
           </div>
+          <div className="flex justify-end w-full">
+    <button
+      onClick={toggleMenu}
+      className="absolute text-gray-500 hover:text-gray-700 cursor-pointer"
+    >
+            <FontAwesomeIcon icon={faEllipsisV} />
+          </button>
+          {isMenuVisible && (
+              <div className="relative top-12 right-0 bg-white shadow-md py-2 px-4 rounded-md space-y-2 w-48 menu-dropdown">
+                {post.email === email && ( 
+              <button
+                onClick={() => handleDeletePost(post.id)}
+                className='text-gray-500'
+              >
+                <FontAwesomeIcon icon={faTrash} />
+                Remove
+              </button>
+            )}
+              </div>
+            )}
+        </div>
         </div>
         <div>
           <p className='py-4'>{post.post}</p>
@@ -142,7 +207,7 @@ const Post = ({ post }) => {
 >
 
           <FaComment className="comment-icon" />
-          <span>Comment</span>
+          <span>{commentCount} comments</span>
           
         </button></div>
 
@@ -152,7 +217,6 @@ const Post = ({ post }) => {
         {showCommentSection && activePostId === post.id && (
           <CommentSection postId={post.id} post={post} />
         )}
-
       </div>
     </div>
   );

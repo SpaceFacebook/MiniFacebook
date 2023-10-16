@@ -33,6 +33,7 @@ public class PostServiceImpl implements  PostService{
             postEntity = postEntityRepository.save(postEntity);
 
             post.setId(postEntity.getId());
+            post.setUser(postEntity.getUser());
             post.setFile(null);
             post.setImage(postEntity.getImage());
             System.out.println("image "+post.getImage());
