@@ -1,5 +1,6 @@
 package com.facebookcloneservice.facebackend.entityPost;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,11 +14,11 @@ public class Commentaire {
     private Long id;
 
     private String contenu;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "post_id")
-
     private PostEntity post;
+//    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

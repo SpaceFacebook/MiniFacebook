@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import EditDetailsModal from './EditDetailsModal';
+
 import { useSelector } from 'react-redux/es/hooks/useSelector';
 import {setUserInfo}  from '../public/src/features/loginSlice';
 import { useDispatch } from 'react-redux';
@@ -28,15 +29,19 @@ const Information=()=> {
       });
   }, [currentUserEmail]);
 
+
   return (
-    <div className="shadow-md bg-slate-400 absolute top-[650px] left-[58px] rounded-md p-4 w-[400px] h-[400px]">
+    <div className="shadow-md bg-slate-100 absolute top-[650px] left-[58px] rounded-md p-4 w-[400px] h-[400px]">
       <strong className="mb-5">Intro</strong>
       {userInfo ? (
         <>
           <p>First name: {userInfo.firstName}</p>
           <p>Last name: {userInfo.surName}</p>
           <p>Email: {userInfo.email}</p>
-          <p>Date of birth: {userInfo.dateBirth}</p>
+          <br/>
+          <p>Date of birth: {new Date(userInfo.dateBirth).toLocaleDateString()}</p>
+          <br/>
+
           <p>Gender: {userInfo.gender}</p>
         </>
       ) : (
@@ -51,6 +56,7 @@ const Information=()=> {
       {isModalOpen && (
         <EditDetailsModal
           isOpen={isModalOpen}
+
           onRequestClose={() => setIsModalOpen(false)}
           userInfo={userInfo}
          

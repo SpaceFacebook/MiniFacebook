@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 
 import Profile from "../components/Profile";
 import Header from "../components/Header";
-
 const Profil = () => {
   return (
     <div>

@@ -24,6 +24,9 @@ public class CommentaireService {
         System.out.println("l'id est "+id);
         return commentaireRepository.findByPostId(id);
     }
+    public int getCommentCountForPost(String postId) {
+        return commentaireRepository.countByPostId(postId);
+    }
 
     // Autres méthodes pour la gestion des commentaires
 }

@@ -8,14 +8,76 @@ const CommentSection = ({ postId, post }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const dateCommentaire = new Date();
- 
+  const currentUserEmail=useSelector((state)=>state.auth.email);
+  const [profileImage, setProfileImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userProfileImages, setUserProfileImages] = useState({});
   const userName = useSelector((state) => state.auth.userName); // Récupérez le nom de l'utilisateur
+  const timeAgo = (date) => {
+    const now = new Date();
+    const timeDiff = now - date;
+    const seconds = Math.floor(timeDiff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
 
+    if (days > 0) {
+      return `${days}d ago`;
+    } else if (hours > 0) {
+      return `${hours}h ago`;
+    } else if (minutes > 0) {
+      return `${minutes}m ago`;
+    } else {
+      return `${seconds}s ago`;
+    }
+  };
   const handleProfil = () => {
     router.push('/profil');
   }
 
   const email = useSelector((state) => state.auth.email);
+  useEffect(() => {
+    const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
+
+    axios
+      .get(USER_INFO_URL)
+      .then((response) => {
+        setProfileImage(response.data.profileImage);
+        setIsLoading(false);
+        // console.log("userInfo: ",userInfo)
+      })
+      .catch((error) => {
+        console.error('Error fetching user information:', error);
+        setIsLoading(false);
+      });
+  }, [currentUserEmail]);
+  
+  // Fonction pour récupérer l'image de profil d'un utilisateur par e-mail
+async function fetchUserProfileImage(email) {
+  try {
+    const response = await axios.get(`http://localhost:8080/api/userInfo?userEmail=${email}`);
+    return response.data.profileImage;
+  } catch (error) {
+    console.error(`Error fetching user information for email ${email}:`, error);
+    return null;
+  }
+}
+useEffect(() => {
+  // Récupération des images de profil des utilisateurs associés aux commentaires
+  const fetchUserImagesForComments = async () => {
+    const userImages = {};
+    for (const comment of comments) {
+      if (comment.user && comment.user.email) {
+        const email = comment.user.email;
+        const profileImage = await fetchUserProfileImage(email);
+        userImages[email] = profileImage;
+      }
+    }
+    setUserProfileImages(userImages);
+  };
+
+  fetchUserImagesForComments();
+}, [comments]);
 
   // Charger les commentaires existants depuis le backend
   useEffect(() => {
@@ -57,7 +119,18 @@ const CommentSection = ({ postId, post }) => {
       });
 
       if (response.status === 200) {
-        setComments([...comments, { contenu: newComment, dateCommentaire }]);
+        // Mettre à jour l'image du profil dans userProfileImages
+        const userProfileImage = await fetchUserProfileImage(email);
+        setUserProfileImages({ ...userProfileImages, [email]: userProfileImage });
+        // Ajouter le nouveau commentaire à la liste des commentaires
+        const newCommentItem = {
+          contenu: newComment,
+          dateCommentaire,
+          user: {
+            email,
+          },
+        };
+        setComments([...comments, newCommentItem]);
         setNewComment('');
       }
     } catch (error) {
@@ -66,15 +139,20 @@ const CommentSection = ({ postId, post }) => {
   };
 
   return (
-    <div className="mt-4">
-      <div className="flex items-center space-x-2">
-        <Image
-          src={imgProfile}
-          height={40}
-          width={40}
-          className="rounded-full cursor-pointer"
-          onClick={handleProfil}
-        />
+    <div className="mt-4 max-h-300 overflow-y-scroll" >
+    <div className="flex items-center space-x-2">
+      {isLoading ? (
+  <div>Loading...</div>
+) : (
+ 
+  <Image
+    src={profileImage}
+    height={40}
+    width={40}
+    className="object-cover rounded-full"
+    alt="image profile"
+  />
+  )}
         <input
           type="text"
           value={newComment}
@@ -89,24 +167,27 @@ const CommentSection = ({ postId, post }) => {
           Comment
         </button>
       </div>
-
+      <div className=' bg-gray-100 max-h-40 overflow-y-auto'>
       {comments.map((comment, index) => (
-        <div key={index} className="bg-gray-100 p-2 rounded-lg my-2">
+        <div key={index} className=" p-2 rounded-lg my-2">
           <div className="flex items-start space-x-2">
             <Image
-              src={imgProfile}
+              src={comment.user && comment.user.email ? userProfileImages[comment.user.email] || imgProfile : imgProfile}
+
               height={40}
               width={40}
               className="rounded-full cursor-pointer"
               onClick={handleProfil}
+              alt="image profile"
             />
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-bold">  {comment.user ? comment.user.firstName : userName || "Unknown"}</span>
-                <span className="text-gray-500 text-sm">
+              <span className="font-bold text-sm">{comment.user && comment.user.email === email ? "You" : comment.user ? comment.user.firstName : userName || "Unknown"}</span>
+
+                <span className="text-gray-500 text-xs">
                   {comment.dateCommentaire && (
-                    <span className="text-gray-500 text-sm">
-                      {new Date(comment.dateCommentaire).toLocaleString()}
+                    <span className="text-gray-500 text-xs">
+                      {timeAgo(new Date(comment.dateCommentaire))}
                     </span>
                   )}
                 </span>
@@ -116,6 +197,7 @@ const CommentSection = ({ postId, post }) => {
           </div>
         </div>
       ))}
+    </div>
     </div>
   );
 };

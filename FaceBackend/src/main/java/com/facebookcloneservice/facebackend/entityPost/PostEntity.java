@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.GenericGenerators;
 
-
+import java.util.List;
 
 
 @Entity
@@ -38,7 +38,11 @@ public class PostEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Commentaire> commentaires;
+    @JsonIgnore
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Reaction> reactions;
 
 
 }

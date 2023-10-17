@@ -106,7 +106,7 @@ const RegisterModal = ({ onClose }) => {
         dispatch(setLoggedIn());
         dispatch(setUserName(firstName + ' ' + surName));
         dispatch(setEmail(email));
-        router.push('/');
+        router.push('/home');
         console.log('Registration successful');
       } else {
         console.error('Registration failed');

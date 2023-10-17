@@ -68,7 +68,6 @@ const Profile = () => {
         setCoverImage(response.data.coverImage);
         setProfileImage(response.data.profileImage);
         setIsLoading(false);
-        // console.log("userInfo: ",userInfo)
       })
       .catch((error) => {
         console.error('Error fetching user information:', error);
@@ -77,11 +76,6 @@ const Profile = () => {
   }, [currentUserEmail]);
     return (
       <div className="bg-white w-[500px] h-[2873px] overflow-hidden text-left text-10xl text-black font-inter bg-{}">
-        {/* <img
-          className="absolute top-[145px] left-[0px] w-[1848px] h-[545px] object-cover"
-          alt=""111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111§
-          src={Image}
-        /> */}
        {isLoading ? (
   <div>Loading...</div>
 ) : (
@@ -90,6 +84,7 @@ const Profile = () => {
     src={coverImage}
     width={400}
     height={200}
+    alt="image de coverture"
   />
 )}
       <input
@@ -127,22 +122,6 @@ const Profile = () => {
         <div className="absolute top-[566px] left-[396px] tracking-[-0.02em] leading-[142.02%] font-medium opacity-[0.65]">
           Comments
         </div>
-        {/* <img
-          className="absolute top-[54px] left-[1688px] w-[59px] h-[59px] object-cover"
-          alt=""
-          src="/3135823-4@2x.png"
-        /> */}
-        {/* <img
-          className="absolute top-[603px] left-[90px] w-[200px] h-[196px] object-cover"
-          alt=""
-          src="/3135823-5@2x.png"
-        /> */}
-        {/* <Image
-        className="absolute top-[354px] left-[90px] w-[160px] h-[156px] object-cover rounded-full"
-        src={profileImage ? profileImage : Image2}
-        width={160}
-        height={156}
-      /> */}
         {isLoading ? (
   <div>Loading...</div>
 ) : (
@@ -152,6 +131,7 @@ const Profile = () => {
     src={profileImage}
     width={160}
     height={156}
+    alt="image de profile"
   />
         )
 }
@@ -173,9 +153,8 @@ const Profile = () => {
       </button>
           <div>
           <Information  />
-          <div className=' shadow-md bg-red-500  absolute top-[1060px] left-[58px] rounded-md p-4 w-[400px] h-[50px]'>Photos</div>
           <Photos/>
-          <div className='bg-slate-400 shadow-lg  absolute top-[650px] left-[600px] rounded-md p-4 w-[600px] '>
+          <div className='bg-slate-100 shadow-lg  absolute top-[650px] left-[600px] rounded-md p-4 w-[600px] '>
             {/* <CreatePost/> */}
             <Posts currentUserEmail={currentUserEmail} userPerformed={true}/>
           </div>

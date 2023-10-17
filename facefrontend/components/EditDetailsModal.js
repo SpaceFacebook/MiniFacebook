@@ -7,6 +7,7 @@ import { setUserInfo,setFirstName, setUserName } from '../public/src/features/lo
  const EditDetailsModal=({ isOpen, onRequestClose, userInfo, onRequestUpdateUserInfo })=> {
   const dispatch=useDispatch();
 
+
   const [updatedUserInfo, setUpdatedUserInfo] = useState(userInfo);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,18 +20,21 @@ import { setUserInfo,setFirstName, setUserName } from '../public/src/features/lo
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Include the user's ID in the URL
+    
     const updateUrl = `http://localhost:8080/api/updateUserInfo?id=${updatedUserInfo.id}`;
+
 
     // Send the updated user information to the backend
     axios.post(updateUrl, updatedUserInfo)
       .then((response) => {
         // Handle success, e.g., show a success message
         console.log('User information updated successfully', response.data);
+
         //dispatch(setUserresponse.data)
          dispatch(setUserInfo(updatedUserInfo));
          dispatch(setFirstName(updatedUserInfo.firstName))
          dispatch(setUserName(updatedUserInfo.firstName))
+
         onRequestUpdateUserInfo(updatedUserInfo);
         onRequestClose();
       })

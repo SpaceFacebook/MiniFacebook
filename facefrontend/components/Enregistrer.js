@@ -16,7 +16,7 @@ const Register = () => {
         <p className="m-0 text-black">
           <b>Sign up</b>
         </p>
-        <p className="m-0 text-darkslategray bg-474656">It’s quick and easy</p>
+        <p className="m-0 text-darkslategray bg-474656">It&#39;s quick and easy</p>
       </div>
     <div className="registration-from">
       <div className=" bg-cae2fe bg-lavender shadow-lg rounded-lg p-8 w-98 row g-3 m-2">

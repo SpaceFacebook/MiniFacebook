@@ -30,10 +30,6 @@ const CreatePost = () => {
  
 
   const email = useSelector((state) => state.auth.email);
-  console.log("hi email from me: ",userInfo)
-  const handleClick = () => {
-    hiddenFileInput.current.click();
-  };
 
   const handleInputChange = () => {
     // Mettez ici votre logique pour déterminer quand afficher le composant
@@ -41,48 +37,10 @@ const CreatePost = () => {
       
     console.log(isOpen)
   };
-
-  const addImageToPost = (e) => {
-    const reader = new FileReader();
-    if (e.target.files[0]) {
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onload = (e) => {
-        setImageToPost(e.target.result);
-      };
-    }
-  };
   const removeImage = () => {
     setImageToPost(null);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!inputRef.current.value) return;
-    const formData = new FormData();
-
-    formData.append("file", imageToPost);
-    console.log("imagetopost: " + imageToPost);
-    formData.append("post", inputRef.current.value);
-    formData.append("name", userInfo.firstName);
-    formData.append("email", userInfo.email);
-    console.log("emaillllllll hi : ",userInfo.email)
-    formData.append("image", imageToPost);
-    formData.append("profilePic", userInfo.imgProfile);
-
-    axios
-      .post(FACEBOOK_CLONE_ENDPOINT, formData, {
-        headers: { Accept: "application/json" },
-      })
-      .then((response) => {
-        inputRef.current.value = "";
-        dispatch(addPost(response.data));
-        console.log(response.data);
-        removeImage();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   const handleClose = () => {
     dispatch(closeModal()); // Utilisez l'action closeModal pour fermer Publish
   };
@@ -114,6 +72,7 @@ const CreatePost = () => {
     height={40}
     width={40}
     className="object-cover rounded-full"
+    alt="image profile"
   />
   )}
           

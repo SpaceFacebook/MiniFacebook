@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface CommentaireRepository extends JpaRepository<Commentaire, String> {
     List<Commentaire> findByPostId(String postId);
+
+    int countByPostId(String postId);
 }
 
