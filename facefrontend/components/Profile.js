@@ -12,13 +12,38 @@ import { requireAuth } from "../auth/customRouter";
 import { useDispatch } from "react-redux";
 import {setUserInfo,setFirstName,setSurName, setUserName} from '../public/src/features/loginSlice';
 const Profile = () => {
-  const currentUserEmail = useSelector((state) => state.auth.email);
+  const [currentUserEmail, setCurrentUserEmail] = useState('');
   const userInfo=useSelector((state)=>state.auth.userInfo);
   const dispatch=useDispatch();
   const [coverImage, setCoverImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    console.log('email courant: ',currentUserEmail)
+    if (typeof window !== 'undefined') {
+      const userEmail = localStorage.getItem('userEmail');
+      setCurrentUserEmail(userEmail);
+    
+    const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
 
+    axios
+      .get(USER_INFO_URL)
+      .then((response) => {
+        dispatch(setUserInfo(response.data));
+        //dispatch(setFirstName(userInfo.firstName));
+        dispatch(setSurName(userInfo.surName));
+        //dispatch(setUserName(userInfo.firstName))
+        setCoverImage(response.data.coverImage);
+        setProfileImage(response.data.profileImage);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching user information:', error);
+        setIsLoading(false);
+      });
+    }
+    
+  }, [currentUserEmail]);
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -55,25 +80,7 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
-
-    axios
-      .get(USER_INFO_URL)
-      .then((response) => {
-        dispatch(setUserInfo(response.data));
-        //dispatch(setFirstName(userInfo.firstName));
-        dispatch(setSurName(userInfo.surName));
-        //dispatch(setUserName(userInfo.firstName))
-        setCoverImage(response.data.coverImage);
-        setProfileImage(response.data.profileImage);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching user information:', error);
-        setIsLoading(false);
-      });
-  }, [currentUserEmail]);
+  
     return (
       <div className="bg-white w-[500px] h-[2873px] overflow-hidden text-left text-10xl text-black font-inter bg-{}">
        {isLoading ? (
@@ -113,14 +120,8 @@ const Profile = () => {
         <div className="absolute top-[566px] left-[58px] tracking-[-0.02em] leading-[142.02%] font-medium opacity-[0.65] border-b border-gray-600">
           Posts
         </div>
-        <div className="absolute top-[566px] left-[158px] tracking-[-0.02em] leading-[142.02%] font-medium opacity-[0.65]">
-          Photos
-        </div>
         <div className="absolute top-[566px] left-[296px] tracking-[-0.02em] leading-[142.02%] font-medium opacity-[0.65]">
           About
-        </div>
-        <div className="absolute top-[566px] left-[396px] tracking-[-0.02em] leading-[142.02%] font-medium opacity-[0.65]">
-          Comments
         </div>
         {isLoading ? (
   <div>Loading...</div>
@@ -152,11 +153,11 @@ const Profile = () => {
         <FontAwesomeIcon icon={faCameraRetro} className="w-[25px] h-[25px] text-white" />
       </button>
           <div>
-          <Information  />
+          <Information/>
           <Photos/>
           <div className='bg-slate-100 shadow-lg  absolute top-[650px] left-[600px] rounded-md p-4 w-[600px] '>
             {/* <CreatePost/> */}
-            <Posts currentUserEmail={currentUserEmail} userPerformed={true}/>
+            <Posts  userPerformed={true}/>
           </div>
           
           </div>

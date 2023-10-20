@@ -15,7 +15,7 @@ const Feed = () => {
       <div className="flex-grow h-screen pt-6 mr-6 no-scrollbar" style={{ overflowY: 'scroll' }}>
         <div className="mx-auto max-w-md md:max-w-xl lg:max-w-2xl" >
          
-          <CreatePost />
+           <CreatePost /> 
          
           <Posts />
         </div>
@@ -28,13 +28,13 @@ const Feed = () => {
       <div className="mx-auto max-w-md md:max-w-xl lg:max-w-2xl flex" >
         {/* Colonne de gauche pour le chatbot */}
         <div className="w-3/4">
-          <CreatePost />
+          <CreatePost /> 
           <Posts />
         </div>
 
         {/* Colonne de droite pour le chatbot */}
         <div className="w-1/4 pl-10">
-        {showChatBot && <Chatbot/>}
+        {/* {showChatBot && <Chatbot/>} */}
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ const CreatePost = () => {
   //const {data: session } =useSession();
 
   const userInfo=useSelector((state)=>state.auth.userInfo);
-  const userName = useSelector((state) => state.auth.userName);
+  //const userName = useSelector((state) => state.auth.userName);
   
  
 
@@ -27,7 +27,7 @@ const CreatePost = () => {
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.post.isOpen);
   const inputRef = useRef(null);
- 
+  const [userName, setUserName] = useState('');
 
   const email = useSelector((state) => state.auth.email);
 
@@ -45,12 +45,16 @@ const CreatePost = () => {
     dispatch(closeModal()); // Utilisez l'action closeModal pour fermer Publish
   };
   useEffect(() => {
-    const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
+    if (typeof window !== 'undefined') {
+      const userEmail = localStorage.getItem('userEmail');
+      if (userEmail) {
+    const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${userEmail}`;
 
     axios
       .get(USER_INFO_URL)
       .then((response) => {
         setProfileImage(response.data.profileImage);
+        setUserName(response.data.firstName);
         setIsLoading(false);
         // console.log("userInfo: ",userInfo)
       })
@@ -58,6 +62,8 @@ const CreatePost = () => {
         console.error('Error fetching user information:', error);
         setIsLoading(false);
       });
+    }
+  }
   }, [currentUserEmail]);
   return (
     <>
@@ -81,7 +87,7 @@ const CreatePost = () => {
               type="text"
              
               className='rounded-full h-12 focus:outline-none font-medium bg-gray-100 px-4 flex-1'
-              placeholder={`What's on your mind, ${userInfo.firstName+" "+userInfo.surName ? userInfo.firstName : userName}?`}
+              placeholder={`What's on your mind, ${userInfo.firstName? userInfo.firstName : userName}?`}
             />
             
           </form>

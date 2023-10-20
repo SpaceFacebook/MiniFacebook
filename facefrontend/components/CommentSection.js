@@ -12,6 +12,7 @@ const CommentSection = ({ postId, post }) => {
   const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [userProfileImages, setUserProfileImages] = useState({});
+  const [newCommentError, setNewCommentError] = useState('');
   const userName = useSelector((state) => state.auth.userName); // Récupérez le nom de l'utilisateur
   const timeAgo = (date) => {
     const now = new Date();
@@ -96,13 +97,15 @@ useEffect(() => {
 
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
+    setNewCommentError('');
   };
 
   const handleAddComment = async () => {
+    setNewCommentError('');
     if (newComment.trim() === '') {
+      setNewCommentError('Le commentaire ne peut pas être vide. Veuillez entrer un commentaire valide.');
       return;
     }
-
     const dateCommentaire = new Date(); // Définissez la date comme étant la date actuelle
 
     try {
@@ -167,6 +170,9 @@ useEffect(() => {
           Comment
         </button>
       </div>
+      {newCommentError && (
+        <p className="text-red-500 mt-2">{newCommentError}</p>
+      )}
       <div className=' bg-gray-100 max-h-40 overflow-y-auto'>
       {comments.map((comment, index) => (
         <div key={index} className=" p-2 rounded-lg my-2">
