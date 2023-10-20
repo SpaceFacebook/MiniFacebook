@@ -40,7 +40,10 @@ public class LoginController {
                 // Authentification réussie
                 Map<String, String> response = new HashMap<>();
                 response.put("message", "Login successful");
-                response.put("userName", user.getFirstName()); // Ajoutez le nom de l'utilisateur
+                response.put("userName", user.getFirstName()); // Ajoutez le prenom de l'utilisateur
+                response.put("surName", user.getSurName()); // Ajoutez le nom de l'utilisateur
+                response.put("email", user.getEmail()); // Ajoutez l'email de l'utilisateur
+
                 return ResponseEntity.ok(response);
             }
         }
@@ -149,15 +152,8 @@ public class LoginController {
         }
     }
 
-                return new ResponseEntity<>("User information updated successfully", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("Failed to update user information", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+
+
 
 
 }

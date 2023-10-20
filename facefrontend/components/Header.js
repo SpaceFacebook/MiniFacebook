@@ -9,14 +9,15 @@ import { setshowChatBot } from '../public/src/features/postSlice';
 import { setLoggedOut } from '../public/src/features/loginSlice'
 
 const Header = () => {
-  const userName = useSelector((state) => state.auth.userName);
+  // const userName = useSelector((state) => state.auth.userName);
   const router = useRouter();
   const showChatBot=useSelector((state)=>state.post.showChatBot);
   const dispatch=useDispatch();
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const currentUserEmail=useSelector((state)=>state.auth.email);
+  // const currentUserEmail=useSelector((state)=>state.auth.email);
+  const [userName, setUserName] = useState('');
   const handleshowchat = () => {
     // Définissez l'état pour afficher ou masquer le Chatbot
     dispatch(setshowChatBot(!showChatBot));
@@ -33,20 +34,26 @@ const Header = () => {
     router.push('/login'); // Redirigez l'utilisateur vers la page de connexion après la déconnexion.
   };
   useEffect(() => {
-    const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
+    if (typeof window !== 'undefined') {
+      const userEmail = localStorage.getItem('userEmail');
+      console.log("Emaillllll3 ",userEmail)
+      if (userEmail) {
+        const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${userEmail}`;
 
-    axios
-      .get(USER_INFO_URL)
-      .then((response) => {
-        setProfileImage(response.data.profileImage);
-        setIsLoading(false);
-        // console.log("userInfo: ",userInfo)
-      })
-      .catch((error) => {
-        console.error('Error fetching user information:', error);
-        setIsLoading(false);
-      });
-  }, [currentUserEmail]);
+        axios
+          .get(USER_INFO_URL)
+          .then((response) => {
+            setProfileImage(response.data.profileImage);
+            setUserName(response.data.firstName)
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            console.error('Error fetching user information:', error);
+            setIsLoading(false);
+          });
+      }
+    }
+  }, []);
   return (
     <div className="bg-blue-500 p-2 shadow-md top-0 sticky z-50 h-16 flex justify-between items-center">
       <div className="flex">

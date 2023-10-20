@@ -7,7 +7,7 @@ import {setUserInfo}  from '../public/src/features/loginSlice';
 import { useDispatch } from 'react-redux';
 
 const Information=()=> {
-  const currentUserEmail = useSelector((state) => state.auth.email);
+  const [currentUserEmail, setCurrentUserEmail] = useState('');
   //const [userInfo, setUserInfo] = useState(null);
   const userInfo=useSelector((state)=>state.auth.userInfo);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,6 +16,9 @@ const Information=()=> {
     setIsModalOpen(true);
   };
   useEffect(() => {
+    const EmailFromLocalStorage = localStorage.getItem('userEmail');
+    //setUserName(userNameFromLocalStorage);
+    setCurrentUserEmail(EmailFromLocalStorage);
     const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
 
     axios

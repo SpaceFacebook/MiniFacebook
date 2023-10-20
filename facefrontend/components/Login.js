@@ -16,6 +16,7 @@ import {
   setLoggedIn,
   setLoggedOut,
   setUserName,
+  setSurName,
 } from '../public/src/features/loginSlice';
 import RegisterModal from './EnregistrerModal';
 
@@ -73,9 +74,21 @@ const Login = () => {
 
       if (response.status === 200) {
         const { userName } = response.data;
+        const { surName } = response.data;
+        console.log("username ",surName)
         dispatch(setUserName(userName));
+        dispatch(setSurName(surName));
         dispatch(setFirstName(userName))
         dispatch(setLoggedIn());
+        console.log("reponse data :",response.data.authToken)
+        // Stockez le jeton d'authentification dans le localStorage
+        localStorage.setItem('authToken', response.data.authToken);
+        console.log("hello")
+        localStorage.setItem('userEmail',response.data.email);
+        localStorage.setItem('firstName',response.data.userName);
+        console.log('💦💤💤💤💥💢',response.data.userName)
+        localStorage.setItem('surName',response.data.surName);
+        
         router.push('/home');
         console.log('Login successful');
       } else {

@@ -1,23 +1,34 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import imgProfile from '../images/man.png';
 import { useRef ,useState} from 'react';
+import Modal from 'react-modal';
 import { IoMdPhotos } from "react-icons/io";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { useDispatch,useSelector } from 'react-redux';
 import { addPost, selectPost } from "../public/src/features/postSlice";
+import { setEmail } from '../public/src/features/loginSlice';
 const Publish = ({ onClose }) => {
   const FACEBOOK_CLONE_ENDPOINT = "http://localhost:8080/api/v1/post"; 
   const inputRef = useRef(null);
-  
+  const [userName, setUserName] = useState('');
   const userInfo = useSelector((state) => state.auth.userInfo);
   const hiddenFileInput = useRef(null);
   const [imageToPost,setImageToPost] = useState(null);
   const dispatch=useDispatch();
-
-  const userName = useSelector((state) => state.auth.userName);
-  const email=useSelector((state)=>state.auth.email);
+  const [showAlert, setShowAlert] = useState(false); // État pour gérer l'affichage de l'alerte
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  //const userName = useSelector((state) => state.auth.userName);
+  const [email, setEmail] = useState('');
+  useEffect(() => {
+    // Récupérer le nom d'utilisateur depuis le localStorage
+    const userNameFromLocalStorage = localStorage.getItem('firstName');
+    const EmailFromLocalStorage = localStorage.getItem('userEmail');
+    setUserName(userNameFromLocalStorage);
+    setEmail(EmailFromLocalStorage);
+    // console.log("❤❤❤ ",userNameFromLocalStorage)
+  }, []);
   const handleClick = () => {
     hiddenFileInput.current.click();
   };
@@ -34,16 +45,19 @@ const Publish = ({ onClose }) => {
   const removeImage = () => {
     setImageToPost(null);
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!inputRef.current.value) return;
+  
+    if (!inputRef.current.value && !imageToPost) {
+      setShowAlert(true); // Affichez l'alerte si à la fois le champ texte et l'image sont vides
+      return;
+    }
     const formData = new FormData();
 
     formData.append("file", imageToPost);
     console.log("imagetopost: " + imageToPost);
     formData.append("post", inputRef.current.value);
-    formData.append("name", userInfo.firstName ? userInfo.firstName : userName);
+    formData.append("name", userName);
     formData.append("email", email);
     formData.append("image", imageToPost);
     formData.append("profilePic", imgProfile);
@@ -63,23 +77,41 @@ const Publish = ({ onClose }) => {
         console.log(error);
       });
   };
+  // const closeAlertModal = () => {
+  //   setIsAlertModalOpen(false);
+  //   setShowAlert(false);
+  // };
 
   
     return (
-      <div className='modal-overlay'><div className='modal w-2/4 h-3/4'>
+      <div>
+      
+      <div className='modal-overlay'>
+        <div className='modal w-2/4 h-3/4'>
       <div className="flex justify-between items-center"> {/* Utilisez flex pour aligner les éléments horizontalement */}
           <h1 className="text-2xl font-medium text-black my-4 flex-1"> {/* Utilisez flex-1 pour que le titre prenne l'espace restant */}
             Create Post
           </h1>
           <button className="text-gray-500 cursor-pointer " onClick={onClose}>&#10006;</button> {/* Bouton Close */}
         </div>
+        {showAlert && (
+          <div className="alert-modal bg-red-500 text-white rounded-md p-2">
+            <p className="mb-1">You can't post an empty post.</p>
+            <button
+              onClick={() => setShowAlert(false)}
+              className="bg-red-700 text-white px-2 rounded-lg"
+            >
+              OK
+            </button>
+          </div>
+        )}
           <div className="border-t border-solid border-darkslategray my-4"></div>
           <textarea
           rows="4" // Définissez le nombre de lignes souhaité ici
           ref={inputRef}
           className='rounded-lg h-2/4 focus:outline-none font-medium bg-gray-100 px-4 w-full text-darkslategray text-xl'
           style={{ border: 'none', background: 'none' }}
-          placeholder={`What’s in your mind, ${userInfo.firstName ? userInfo.firstName : userName}?`}
+          placeholder={`What’s in your mind, ${userName}?`}
         ></textarea>
           
           <form className="flex items-center">
@@ -117,15 +149,17 @@ const Publish = ({ onClose }) => {
         </form> */}
             
           
-          {imageToPost && (
-            <div className="my-4">
+          {/* {imageToPost && (
+            <div className="my-2">
               <img
                 src={imageToPost}
                 alt="Selected Image"
                 className="w-full h-auto rounded-lg"
               />
             </div>
-          )}
+          )} */}
+          
+        </div>
         </div>
         </div>
     );
