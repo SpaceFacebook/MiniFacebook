@@ -88,6 +88,7 @@ const Login = () => {
         localStorage.setItem('firstName',response.data.userName);
         console.log('💦💤💤💤💥💢',response.data.userName)
         localStorage.setItem('surName',response.data.surName);
+        localStorage.setItem('isLoggedIn',true);
         
         router.push('/home');
         console.log('Login successful');

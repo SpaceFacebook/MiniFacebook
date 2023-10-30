@@ -34,7 +34,7 @@ const Feed = () => {
 
         {/* Colonne de droite pour le chatbot */}
         <div className="w-1/4 pl-10">
-        {/* {showChatBot && <Chatbot/>} */}
+        {showChatBot && <Chatbot/>}
         </div>
       </div>
     </div>

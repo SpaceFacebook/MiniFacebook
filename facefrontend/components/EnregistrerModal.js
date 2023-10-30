@@ -104,7 +104,11 @@ const RegisterModal = ({ onClose }) => {
 
       if (response.status === 200) {
         dispatch(setLoggedIn());
+        localStorage.setItem('userEmail',response.data.email);
+        localStorage.setItem('firstName',response.data.userName);
+        localStorage.setItem('surName',response.data.surName);
         dispatch(setUserName(firstName + ' ' + surName));
+        localStorage.setItem('isLoggedIn',true);
         dispatch(setEmail(email));
         router.push('/home');
         console.log('Registration successful');
@@ -115,15 +119,7 @@ const RegisterModal = ({ onClose }) => {
       if (error.response && error.response.status === 409) {
         // Email exists error
         setemailExistsError({ emailExistsError: 'Email already exists. Please use a different email.' });
-        // Réinitialisation des champs
-      /*dispatch(setEmail(''));
-      dispatch(setPassword(''));
-      dispatch(setFirstName(''));
-      dispatch(setSurName(''));
-      dispatch(setGender(''));
-      dispatch(setSelectedDay(''));
-      dispatch(setSelectedMonth(''));
-      dispatch(setSelectedYear(''));*/
+        
         console.log('error',error)
       } else {
         console.error('Error:', error);

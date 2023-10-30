@@ -6,7 +6,7 @@ import { useSelector,useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import logochat from '../images/logochatbot1.png'
 import { setshowChatBot } from '../public/src/features/postSlice';
-import { setLoggedOut } from '../public/src/features/loginSlice'
+import { setLoggedOut,setUserName } from '../public/src/features/loginSlice';
 
 const Header = () => {
   // const userName = useSelector((state) => state.auth.userName);
@@ -17,7 +17,8 @@ const Header = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   // const currentUserEmail=useSelector((state)=>state.auth.email);
-  const [userName, setUserName] = useState('');
+  // const [userName, setUserName] = useState('');
+  const userName = useSelector((state) => state.auth.userName);
   const handleshowchat = () => {
     // Définissez l'état pour afficher ou masquer le Chatbot
     dispatch(setshowChatBot(!showChatBot));
@@ -31,12 +32,14 @@ const Header = () => {
   const handleLogout = () => {
     // Effectuez ici les actions nécessaires pour la déconnexion, par exemple, vider le state Redux, supprimer les cookies de session, etc.
     dispatch(setLoggedOut());
+    // Mettez à jour la variable `isLoggedIn` dans le localStorage
+  localStorage.setItem('isLoggedIn', 'false'); // Définissez la valeur sur 'false'
+
     router.push('/login'); // Redirigez l'utilisateur vers la page de connexion après la déconnexion.
   };
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const userEmail = localStorage.getItem('userEmail');
-      console.log("Emaillllll3 ",userEmail)
       if (userEmail) {
         const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${userEmail}`;
 
@@ -44,7 +47,8 @@ const Header = () => {
           .get(USER_INFO_URL)
           .then((response) => {
             setProfileImage(response.data.profileImage);
-            setUserName(response.data.firstName)
+            // setUserName(response.data.firstName)
+            dispatch(setUserName(response.data.firstName));
             setIsLoading(false);
           })
           .catch((error) => {

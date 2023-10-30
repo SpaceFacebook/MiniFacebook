@@ -22,7 +22,8 @@ const Post = ({ post }) => {
     setIsMenuVisible(!isMenuVisible);
   };
   const showCommentSection = useSelector((state) => state.post.showCommentSection);
-  const email=useSelector((state)=>state.auth.email);
+  // const email=useSelector((state)=>state.auth.email);
+  const [currentUserEmail, setCurrentUserEmail] = useState('');
   const dispatch = useDispatch();
   const handleCommentButtonClick = async(postId) => {
     if (postId === activePostId) {
@@ -35,9 +36,9 @@ const Post = ({ post }) => {
   };
   const handleDeletePost = async (postId) => {
     // Vérifiez si l'utilisateur est l'auteur de la publication
-    if (post.email === email) {
+    if (post.email === currentUserEmail) {
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/post/deletePost/${postId}?userEmail=${email}`, {
+        const response = await fetch(`http://localhost:8080/api/v1/post/deletePost/${postId}?userEmail=${currentUserEmail}`, {
           method: 'DELETE',
         });
   
@@ -55,40 +56,78 @@ const Post = ({ post }) => {
     }
   };
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const userEmail = localStorage.getItem('userEmail');
+      setCurrentUserEmail(userEmail);
     fetchCommentCount(post.id);
     const interval = setInterval(() => {
       fetchCommentCount(post.id);
-    }, 1000);
+      }, 1000);
     return () => clearInterval(interval);
-  }, [post.id]);
+  }}, [post.id]);
   const handleReactionClick = async (postId, reactionType) => {
     try {
-      const reactionData = {
-        user: { email: email },
-        reactionType: reactionType,
-      };
-
-      const response = await fetch(`http://localhost:8080/api/reaction/${postId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(reactionData),
-      });
-        console.log("reaction typpppe: ",reactionType);
-
+      const userEmail = currentUserEmail; // Récupérez l'email de l'utilisateur
+      if (userEmail) {
+        console.log("user email envoyer est: ",userEmail)
+        const reactionData = {
+          user: userEmail,
+          reactionType: reactionType,
+        };
+        
+        const response = await fetch(`http://localhost:8080/api/reaction/${postId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(reactionData),
+        });
+  
         if (response.status === 200) {
           setReactionType(reactionType);
           console.log('Réaction enregistrée avec succès');
           fetchReactionCount();
+          localStorage.setItem(`userReaction-${postId}`, reactionType);
         } else {
           console.error('Échec de l\'enregistrement de la réaction');
         }
-      } catch (error) {
-        console.error('Erreur lors de l\'enregistrement de la réaction : ', error);
+      } else {
+        console.error('L\'email de l\'utilisateur est nul.');
       }
-    
+    } catch (error) {
+      console.error('Erreur lors de l\'enregistrement de la réaction : ', error);
+    }
   };
+  
+  // const handleReactionClick = async (postId, reactionType) => {
+  //   try {
+  //     const reactionData = {
+  //       user: { email: currentUserEmail },
+  //       reactionType: reactionType,
+  //     };
+  //     if(reactionData.user.email){
+  //     const response = await fetch(`http://localhost:8080/api/reaction/${postId}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(reactionData),
+  //     });
+  //   }
+
+  //       if (response.status === 200) {
+  //         setReactionType(reactionType);
+  //         console.log('Réaction enregistrée avec succès');
+  //         fetchReactionCount();
+  //       } else {
+  //         console.error('Échec de l\'enregistrement de la réaction');
+  //       }
+      
+  //     } catch (error) {
+  //       console.error('Erreur lors de l\'enregistrement de la réaction : ', error);
+  //     }
+    
+  // };
   // Fonction pour obtenir le nombre de commentaires pour le poste
   const fetchCommentCount = async (postId) => {
     try {
@@ -130,6 +169,12 @@ const Post = ({ post }) => {
   useEffect(() => {
     fetchReactionCount();
   }, []);
+  useEffect(() => {
+    const userReaction = localStorage.getItem(`userReaction-${post.id}`);
+    if (userReaction) {
+      setReactionType(userReaction);
+    }
+  }, [post.id]);
 
   return isDeleted ? null : (
     <div className='flex flex-col' key={post.id}>
@@ -160,7 +205,7 @@ const Post = ({ post }) => {
           </button>
           {isMenuVisible && (
               <div className="relative top-12 right-0 bg-white shadow-md py-2 px-4 rounded-md space-y-2 w-48 menu-dropdown">
-                {post.email === email && ( 
+                {post.email === currentUserEmail && ( 
               <button
                 onClick={() => handleDeletePost(post.id)}
                 className='text-gray-500'
@@ -186,7 +231,8 @@ const Post = ({ post }) => {
        <div className="flex justify-center items-center space-x-2">
        <button
     onClick={() => handleReactionClick(post.id, 'LIKE')}
-    className={`text-gray-500 hover:text-blue-500 cursor-pointer flex items-center space-x-2 ${reactionType === 'LIKE' ? 'text-blue-500' : ''}`}
+    className={`cursor-pointer hover:text-blue-500 flex items-center space-x-2 transition-colors ${reactionType === 'LIKE' ? 'text-blue-500' : 'text-gray-500'}`}
+
 >
     <FontAwesomeIcon icon={faThumbsUp} className="like-icon" />
     {likeCount} Likes

@@ -8,12 +8,13 @@ const CommentSection = ({ postId, post }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const dateCommentaire = new Date();
-  const currentUserEmail=useSelector((state)=>state.auth.email);
+  const [currentUserEmail, setCurrentUserEmail] = useState('');
   const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [userProfileImages, setUserProfileImages] = useState({});
   const [newCommentError, setNewCommentError] = useState('');
   const userName = useSelector((state) => state.auth.userName); // Récupérez le nom de l'utilisateur
+  const [commentAdded, setCommentAdded] = useState(false);
   const timeAgo = (date) => {
     const now = new Date();
     const timeDiff = now - date;
@@ -36,8 +37,13 @@ const CommentSection = ({ postId, post }) => {
     router.push('/profil');
   }
 
-  const email = useSelector((state) => state.auth.email);
+  // const email = useSelector((state) => state.auth.email);
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const userEmail = localStorage.getItem('userEmail');
+      setCurrentUserEmail(userEmail);
+      if(currentUserEmail){
+        console.log("L_email est : ",currentUserEmail)
     const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
 
     axios
@@ -51,6 +57,8 @@ const CommentSection = ({ postId, post }) => {
         console.error('Error fetching user information:', error);
         setIsLoading(false);
       });
+    }
+  }
   }, [currentUserEmail]);
   
   // Fonction pour récupérer l'image de profil d'un utilisateur par e-mail
@@ -93,7 +101,7 @@ useEffect(() => {
     }
 
     fetchComments();
-  }, [postId]);
+  }, [postId, commentAdded]);
 
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
@@ -107,30 +115,53 @@ useEffect(() => {
       return;
     }
     const dateCommentaire = new Date(); // Définissez la date comme étant la date actuelle
-
+    const commentaireData = {
+      contenu: newComment,
+      userEmail: currentUserEmail,
+      postId: postId,
+      dateCommentaire:dateCommentaire.toISOString(),
+    };
     try {
-      const response = await axios.post('http://localhost:8080/api/commentaires/ajouter', {
-        post: { id: postId },
-        user: { email: email },
-        contenu: newComment,
-        dateCommentaire
-      }, {
+      console.log("post id est: ",postId)
+      const response = await axios.post('http://localhost:8080/api/commentaires/ajouter',commentaireData, {
+        
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       });
 
+      // if (response.status === 200) {
+      //   // Mettre à jour l'image du profil dans userProfileImages
+      //   const userProfileImage = await fetchUserProfileImage(currentUserEmail);
+      //   // Update userProfileImages state first
+      // setUserProfileImages({
+      //   ...userProfileImages,
+      //   [currentUserEmail]: userProfileImage,
+      // });
+      //   // Ajouter le nouveau commentaire à la liste des commentaires
+      //   const newCommentItem = {
+      //     contenu: newComment,
+      //     dateCommentaire,
+      //     user: {
+      //       currentUserEmail,
+      //     },
+      //   };
+      //   setComments([...comments, newCommentItem]);
+      //   setNewComment('');
+      // }
       if (response.status === 200) {
-        // Mettre à jour l'image du profil dans userProfileImages
-        const userProfileImage = await fetchUserProfileImage(email);
-        setUserProfileImages({ ...userProfileImages, [email]: userProfileImage });
-        // Ajouter le nouveau commentaire à la liste des commentaires
+        const userProfileImage = await fetchUserProfileImage(currentUserEmail);
+        setUserProfileImages({
+          ...userProfileImages,
+          [currentUserEmail]: userProfileImage,
+        });
+        setCommentAdded((prev) => !prev); // Force a rerender
         const newCommentItem = {
           contenu: newComment,
           dateCommentaire,
           user: {
-            email,
+            currentUserEmail,
           },
         };
         setComments([...comments, newCommentItem]);
@@ -188,7 +219,7 @@ useEffect(() => {
             />
             <div>
               <div className="flex items-center space-x-2">
-              <span className="font-bold text-sm">{comment.user && comment.user.email === email ? "You" : comment.user ? comment.user.firstName : userName || "Unknown"}</span>
+              <span className="font-bold text-sm">{comment.user && comment.user.email === currentUserEmail ? "You" : comment.user ? comment.user.firstName : userName || "Unknown"}</span>
 
                 <span className="text-gray-500 text-xs">
                   {comment.dateCommentaire && (

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,5 +75,10 @@ public class PostServiceImpl implements  PostService{
     public List<PostEntity> getPostsByEmail(String email) {
         // Implement the logic to get posts by user
         return postEntityRepository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<PostEntity> getPostById(String id) {
+        return postEntityRepository.findById(id);
     }
 }
