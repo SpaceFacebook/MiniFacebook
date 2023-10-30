@@ -19,7 +19,7 @@ const Posts = ({ userPerformed}) => {
       const userEmail = localStorage.getItem('userEmail');
       setCurrentUserEmail(userEmail);
     }
-
+    if(currentUserEmail){
     const fetchData = () => {
       const FACEBOOK_CLONE_ENDPOINT = 'http://localhost:8080/api/v1/post';
 
@@ -35,7 +35,6 @@ const Posts = ({ userPerformed}) => {
 
     if (userPerformed) {
       const USER_SPECIFIC_URL = `http://localhost:8080/api/v1/post/api/postUser?userEmail=${currentUserEmail}`;
-
       axios
         .get(USER_SPECIFIC_URL)
         .then((response) => {
@@ -46,7 +45,7 @@ const Posts = ({ userPerformed}) => {
         });
     } else {
       fetchData();
-    }
+    }}
   }, [dispatch, userPerformed, currentUserEmail]);
 
   return (

@@ -52,6 +52,11 @@ public class RegisterController {
         // Registration successful
         Map<String, String> response = new HashMap<>();
         response.put("message", "Registration successful");
+        response.put("email", user.getEmail());
+        response.put("userName", user.getFirstName()); // Ajoutez le prenom de l'utilisateur
+        response.put("surName", user.getSurName());
+        response.put("dateBirth", String.valueOf(user.getDateBirth()));
+        response.put("gender", String.valueOf(user.getGender()));
         return ResponseEntity.ok(response);
     }
 }

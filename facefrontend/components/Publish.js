@@ -96,7 +96,7 @@ const Publish = ({ onClose }) => {
         </div>
         {showAlert && (
           <div className="alert-modal bg-red-500 text-white rounded-md p-2">
-            <p className="mb-1">You can't post an empty post.</p>
+            <p className="mb-1">You can&#39;t post an empty post.</p>
             <button
               onClick={() => setShowAlert(false)}
               className="bg-red-700 text-white px-2 rounded-lg"

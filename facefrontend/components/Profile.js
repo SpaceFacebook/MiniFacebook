@@ -19,13 +19,12 @@ const Profile = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    console.log('email courant: ',currentUserEmail)
     if (typeof window !== 'undefined') {
       const userEmail = localStorage.getItem('userEmail');
       setCurrentUserEmail(userEmail);
-    
+      if(currentUserEmail){
     const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
-
+    // const params = {userEmail:currentUserEmail}
     axios
       .get(USER_INFO_URL)
       .then((response) => {
@@ -35,14 +34,16 @@ const Profile = () => {
         //dispatch(setUserName(userInfo.firstName))
         setCoverImage(response.data.coverImage);
         setProfileImage(response.data.profileImage);
+        
         setIsLoading(false);
+        console.log("image ",response.data.profileImage)
       })
       .catch((error) => {
         console.error('Error fetching user information:', error);
         setIsLoading(false);
       });
     }
-    
+  }
   }, [currentUserEmail]);
   const handleImageChange = (event) => {
     const file = event.target.files[0];

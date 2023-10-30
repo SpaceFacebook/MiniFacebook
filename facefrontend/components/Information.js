@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import EditDetailsModal from './EditDetailsModal';
-
-import { useSelector } from 'react-redux/es/hooks/useSelector';
-import {setUserInfo}  from '../public/src/features/loginSlice';
 import { useDispatch } from 'react-redux';
 
 const Information=()=> {
   const [currentUserEmail, setCurrentUserEmail] = useState('');
-  //const [userInfo, setUserInfo] = useState(null);
-  const userInfo=useSelector((state)=>state.auth.userInfo);
+  const [userInfo, setUserInfo] = useState('');
+  // const userInfo=useSelector((state)=>state.auth.userInfo);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch =useDispatch();
   const openModal = () => {
     setIsModalOpen(true);
   };
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const userEmail = localStorage.getItem('userEmail');
     const EmailFromLocalStorage = localStorage.getItem('userEmail');
     //setUserName(userNameFromLocalStorage);
     setCurrentUserEmail(EmailFromLocalStorage);
+    if(currentUserEmail){
     const USER_INFO_URL = `http://localhost:8080/api/userInfo?userEmail=${currentUserEmail}`;
 
     axios
@@ -30,7 +30,11 @@ const Information=()=> {
       .catch((error) => {
         console.error('Error fetching user information:', error);
       });
+    }}
   }, [currentUserEmail]);
+  const handleUpdateUserInfo = (updatedInfo) => {
+    setUserInfo(updatedInfo);
+  };
 
 
   return (
@@ -59,10 +63,9 @@ const Information=()=> {
       {isModalOpen && (
         <EditDetailsModal
           isOpen={isModalOpen}
-
           onRequestClose={() => setIsModalOpen(false)}
           userInfo={userInfo}
-         
+          onRequestUpdateUserInfo={handleUpdateUserInfo}
         />
       )}
     </div>
